@@ -58,7 +58,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun UniSmsTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = true, // Default to sleek, consistent dark theme
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme

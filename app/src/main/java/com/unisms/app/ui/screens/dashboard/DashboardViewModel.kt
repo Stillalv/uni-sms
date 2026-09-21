@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.unisms.app.data.local.db.ActivationRecordEntity
 import com.unisms.app.data.model.CountryItem
+import com.unisms.app.data.model.ProviderItem
 import com.unisms.app.data.model.Resource
 import com.unisms.app.data.model.ServiceItem
 import com.unisms.app.data.repository.SmsBowerRepository
@@ -18,6 +19,7 @@ data class DashboardUiState(
     val isBalanceLoading: Boolean = false,
     val services: List<ServiceItem> = ServiceCatalog.defaultServices,
     val selectedService: ServiceItem = ServiceCatalog.defaultServices.first(),
+    val isServicePickerOpen: Boolean = false,
     val countries: List<CountryItem> = emptyList(),
     val topCountryIds: List<String> = emptyList(),
     val isCatalogLoading: Boolean = false,
@@ -25,6 +27,9 @@ data class DashboardUiState(
     val errorMessage: String? = null,
     val isPurchasing: Boolean = false,
     val confirmBuyCountry: CountryItem? = null,
+    val providers: List<ProviderItem> = emptyList(),
+    val isLoadingProviders: Boolean = false,
+    val selectedProvider: ProviderItem? = null,
     val purchasedRecord: ActivationRecordEntity? = null
 )
 
@@ -116,17 +121,49 @@ class DashboardViewModel(
         _uiState.value = _uiState.value.copy(searchQuery = query)
     }
 
+    fun openServicePicker() {
+        _uiState.value = _uiState.value.copy(isServicePickerOpen = true)
+    }
+
+    fun closeServicePicker() {
+        _uiState.value = _uiState.value.copy(isServicePickerOpen = false)
+    }
+
+    fun selectProvider(provider: ProviderItem?) {
+        _uiState.value = _uiState.value.copy(selectedProvider = provider)
+    }
+
     fun initiateBuy(country: CountryItem) {
-        _uiState.value = _uiState.value.copy(confirmBuyCountry = country)
+        val currentService = _uiState.value.selectedService
+        _uiState.value = _uiState.value.copy(
+            confirmBuyCountry = country,
+            selectedProvider = null,
+            providers = emptyList(),
+            isLoadingProviders = true
+        )
+
+        viewModelScope.launch {
+            val fetchedProviders = repository.getProviders(currentService.code, country.id)
+            _uiState.value = _uiState.value.copy(
+                providers = fetchedProviders,
+                isLoadingProviders = false
+            )
+        }
     }
 
     fun dismissConfirmBuy() {
-        _uiState.value = _uiState.value.copy(confirmBuyCountry = null)
+        _uiState.value = _uiState.value.copy(
+            confirmBuyCountry = null,
+            selectedProvider = null,
+            providers = emptyList(),
+            isLoadingProviders = false
+        )
     }
 
     fun confirmBuy() {
         val country = _uiState.value.confirmBuyCountry ?: return
         val service = _uiState.value.selectedService
+        val provider = _uiState.value.selectedProvider
         _uiState.value = _uiState.value.copy(isPurchasing = true, confirmBuyCountry = null, errorMessage = null)
 
         viewModelScope.launch {
@@ -135,7 +172,8 @@ class DashboardViewModel(
                 serviceName = service.name,
                 countryId = country.id,
                 countryName = country.name,
-                flag = country.flagEmoji
+                flag = country.flagEmoji,
+                providerId = provider?.id
             )) {
                 is Resource.Success -> {
                     _uiState.value = _uiState.value.copy(

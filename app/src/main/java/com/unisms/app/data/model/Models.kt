@@ -37,6 +37,13 @@ data class CountryItem(
     val count: Int = 0
 )
 
+data class ProviderItem(
+    val id: String,
+    val name: String,
+    val count: Int,
+    val price: Double
+)
+
 sealed class OtpStatus {
     data object WaitingCode : OtpStatus()
     data class CodeReceived(val code: String) : OtpStatus()

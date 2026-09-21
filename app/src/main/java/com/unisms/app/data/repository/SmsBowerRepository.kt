@@ -8,6 +8,7 @@ import com.unisms.app.data.local.db.ActivationRecordEntity
 import com.unisms.app.data.model.ActivationOrderV2
 import com.unisms.app.data.model.CountryItem
 import com.unisms.app.data.model.OtpStatus
+import com.unisms.app.data.model.ProviderItem
 import com.unisms.app.data.model.Resource
 import com.unisms.app.data.model.ServiceItem
 import com.unisms.app.ui.util.ServiceCatalog
@@ -86,16 +87,32 @@ class SmsBowerRepository(
         }
     }
 
+    suspend fun getProviders(serviceCode: String, countryId: String): List<ProviderItem> = withContext(Dispatchers.IO) {
+        val apiKey = getApiKey() ?: return@withContext emptyList()
+        try {
+            val response = apiService.getPricesV3(apiKey = apiKey, service = serviceCode, country = countryId)
+            SmsBowerResponseParser.parseProvidersV3(response, countryId, serviceCode)
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
+
     suspend fun buyNumberV2(
         serviceCode: String,
         serviceName: String,
         countryId: String,
         countryName: String,
-        flag: String
+        flag: String,
+        providerId: String? = null
     ): Resource<ActivationRecordEntity> = withContext(Dispatchers.IO) {
         val apiKey = getApiKey() ?: return@withContext Resource.Error("API Key belum disetel.", "NO_KEY")
         try {
-            val response = apiService.getNumberV2(apiKey = apiKey, service = serviceCode, country = countryId)
+            val response = apiService.getNumberV2(
+                apiKey = apiKey,
+                service = serviceCode,
+                country = countryId,
+                providerIds = providerId
+            )
             val parseResult = SmsBowerResponseParser.parseBuyNumber(response)
             when (parseResult) {
                 is Resource.Success -> {

@@ -1,6 +1,8 @@
 package com.unisms.app.ui.screens.dashboard
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -20,6 +23,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,6 +53,7 @@ import com.unisms.app.ui.components.BalanceCard
 import com.unisms.app.ui.components.ConfirmBuyDialog
 import com.unisms.app.ui.components.CountryItemRow
 import com.unisms.app.ui.components.ServiceFilterChip
+import com.unisms.app.ui.components.ServicePickerDialog
 import com.unisms.app.ui.theme.CardDark
 import com.unisms.app.ui.theme.IndigoPrimary
 import com.unisms.app.ui.theme.TextPrimary
@@ -122,11 +130,51 @@ fun DashboardScreen(
                 }
             }
 
-            // Search Bar
+            // Service Selection Card with Search Button
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { viewModel.openServicePicker() },
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                border = BorderStroke(1.dp, IndigoPrimary.copy(alpha = 0.4f))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text("Layanan Terpilih:", style = MaterialTheme.typography.labelSmall, color = TextSecondary)
+                        Text(
+                            text = uiState.selectedService.name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = IndigoPrimary
+                        )
+                    }
+                    Button(
+                        onClick = { viewModel.openServicePicker() },
+                        colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary),
+                        shape = RoundedCornerShape(10.dp),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+                    ) {
+                        Icon(Icons.Default.Search, contentDescription = "Cari", modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Cari Layanan", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Search Bar for Countries
             OutlinedTextField(
                 value = uiState.searchQuery,
                 onValueChange = { viewModel.onSearchQueryChanged(it) },
-                placeholder = { Text("Cari negara atau layanan...", color = TextSecondary) },
+                placeholder = { Text("Cari negara (Indonesia, USA, Brazil, dll)...", color = TextSecondary) },
                 leadingIcon = {
                     Icon(Icons.Default.Search, contentDescription = "Search", tint = TextSecondary)
                 },
@@ -139,7 +187,7 @@ fun DashboardScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 4.dp),
                 shape = RoundedCornerShape(14.dp),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -150,11 +198,24 @@ fun DashboardScreen(
                 )
             )
 
-            // Horizontal Services Selector
+            // Horizontal Services Quick Chips
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(vertical = 6.dp)
             ) {
+                item {
+                    Button(
+                        onClick = { viewModel.openServicePicker() },
+                        colors = ButtonDefaults.buttonColors(containerColor = CardDark),
+                        border = BorderStroke(1.dp, IndigoPrimary.copy(alpha = 0.5f)),
+                        shape = RoundedCornerShape(14.dp),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+                    ) {
+                        Icon(Icons.Default.Search, contentDescription = "Semua", tint = IndigoPrimary, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Semua Layanan...", color = TextPrimary, style = MaterialTheme.typography.labelLarge)
+                    }
+                }
                 items(uiState.services) { service ->
                     ServiceFilterChip(
                         service = service,
@@ -226,15 +287,29 @@ fun DashboardScreen(
             }
         }
 
-        // Purchase Confirmation Dialog
+        // Purchase Confirmation Dialog with Operator / Provider Selection
         uiState.confirmBuyCountry?.let { country ->
             ConfirmBuyDialog(
                 serviceName = uiState.selectedService.name,
                 countryName = country.name,
                 flag = country.flagEmoji,
-                cost = country.cost,
+                baseCost = country.cost,
+                providers = uiState.providers,
+                isLoadingProviders = uiState.isLoadingProviders,
+                selectedProvider = uiState.selectedProvider,
+                onProviderSelected = { viewModel.selectProvider(it) },
                 onConfirm = { viewModel.confirmBuy() },
                 onDismiss = { viewModel.dismissConfirmBuy() }
+            )
+        }
+
+        // Searchable Service Picker Dialog
+        if (uiState.isServicePickerOpen) {
+            ServicePickerDialog(
+                services = uiState.services,
+                selectedService = uiState.selectedService,
+                onSelectService = { viewModel.selectService(it) },
+                onDismiss = { viewModel.closeServicePicker() }
             )
         }
     }

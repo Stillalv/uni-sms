@@ -21,10 +21,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
@@ -33,16 +40,23 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +67,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.unisms.app.data.model.CountryItem
+import com.unisms.app.data.model.ProviderItem
 import com.unisms.app.data.model.ServiceItem
 import com.unisms.app.ui.theme.AmberWarning
 import com.unisms.app.ui.theme.CardDark
@@ -469,41 +484,251 @@ fun StatusBadge(
 }
 
 @Composable
+fun ServicePickerDialog(
+    services: List<ServiceItem>,
+    selectedService: ServiceItem,
+    onSelectService: (ServiceItem) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var searchQuery by remember { mutableStateOf("") }
+    val filteredServices = remember(services, searchQuery) {
+        if (searchQuery.isBlank()) services
+        else {
+            val q = searchQuery.trim().lowercase()
+            services.filter { it.name.lowercase().contains(q) || it.code.lowercase().contains(q) }
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Pilih Layanan SMS",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    placeholder = { Text("Ketik nama layanan (WhatsApp, Google, dll)...", color = TextSecondary, style = MaterialTheme.typography.bodyMedium) },
+                    leadingIcon = {
+                        Icon(Icons.Default.Search, contentDescription = "Search", tint = IndigoPrimary)
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { searchQuery = "" }) {
+                                Icon(Icons.Default.Clear, contentDescription = "Clear", tint = TextSecondary)
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = IndigoPrimary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
+                        focusedContainerColor = CardDark,
+                        unfocusedContainerColor = CardDark
+                    )
+                )
+            }
+        },
+        text = {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(340.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                if (filteredServices.isEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("Tidak ada layanan yang cocok.", color = TextSecondary)
+                        }
+                    }
+                } else {
+                    items(filteredServices, key = { it.code }) { service ->
+                        val isSelected = service.code == selectedService.code
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onSelectService(service)
+                                    onDismiss()
+                                },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = if (isSelected) IndigoPrimary.copy(alpha = 0.2f) else CardDark
+                            ),
+                            border = BorderStroke(
+                                1.dp,
+                                if (isSelected) IndigoPrimary else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
+                            )
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Text(
+                                        text = service.name,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+                                        color = if (isSelected) IndigoPrimary else TextPrimary
+                                    )
+                                    Text(
+                                        text = "Kode: ${service.code} · ${service.category}",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = TextSecondary
+                                    )
+                                }
+                                if (isSelected) {
+                                    Icon(
+                                        imageVector = Icons.Default.CheckCircle,
+                                        contentDescription = "Selected",
+                                        tint = IndigoPrimary,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Tutup", color = IndigoPrimary)
+            }
+        }
+    )
+}
+
+@Composable
 fun ConfirmBuyDialog(
     serviceName: String,
     countryName: String,
     flag: String,
-    cost: Double,
+    baseCost: Double,
+    providers: List<ProviderItem>,
+    isLoadingProviders: Boolean,
+    selectedProvider: ProviderItem?,
+    onProviderSelected: (ProviderItem?) -> Unit,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    val effectiveCost = selectedProvider?.price ?: baseCost
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = "Konfirmasi Pembelian Nomor", style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = "Konfirmasi Pembelian Nomor",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary
+            )
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
                 Text("Anda akan membeli nomor virtual untuk:", color = TextSecondary)
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = flag, fontSize = 24.sp, modifier = Modifier.padding(end = 8.dp))
-                    Text(text = "$countryName — $serviceName", fontWeight = FontWeight.Bold)
+                    Text(text = flag, fontSize = 28.sp, modifier = Modifier.padding(end = 10.dp))
+                    Column {
+                        Text(
+                            text = "$countryName — $serviceName",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = TextPrimary
+                        )
+                    }
                 }
+
+                Spacer(modifier = Modifier.height(2.dp))
+
+                // Provider / Operator Selection
+                Text(
+                    text = "Pilih Operator / Provider:",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextPrimary
+                )
+
+                if (isLoadingProviders) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(vertical = 6.dp)
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = IndigoPrimary)
+                        Text("Memuat daftar operator...", style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+                    }
+                } else {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(vertical = 4.dp)
+                    ) {
+                        item {
+                            FilterChip(
+                                selected = selectedProvider == null,
+                                onClick = { onProviderSelected(null) },
+                                label = { Text("⚡ Otomatis (Termurah)") },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = IndigoPrimary,
+                                    selectedLabelColor = Color.White
+                                )
+                            )
+                        }
+                        items(providers) { provider ->
+                            val isSel = selectedProvider?.id == provider.id
+                            FilterChip(
+                                selected = isSel,
+                                onClick = { onProviderSelected(provider) },
+                                label = {
+                                    Text("${provider.name} ($${String.format(Locale.US, \"%.2f\", provider.price)} · ${provider.count} pcs)")
+                                },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = IndigoPrimary,
+                                    selectedLabelColor = Color.White
+                                )
+                            )
+                        }
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(4.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Tarif:", color = TextSecondary)
+                    Text(text = "Total Tarif:", color = TextSecondary, style = MaterialTheme.typography.bodyLarge)
                     Text(
-                        text = String.format(Locale.US, "$%.2f", cost),
+                        text = String.format(Locale.US, "$%.2f", effectiveCost),
+                        style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = EmeraldAccent
                     )
                 }
+
                 Text(
-                    text = "Catatan: Jika dalam 20 menit SMS tidak masuk, biaya akan dikembalikan secara penuh (No Code No Pay).",
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "Catatan: Jika dalam 20 menit SMS tidak masuk, saldo akan dikembalikan secara penuh (No Code No Pay).",
+                    style = MaterialTheme.typography.bodySmall,
                     color = TextMuted
                 )
             }
@@ -511,9 +736,10 @@ fun ConfirmBuyDialog(
         confirmButton = {
             Button(
                 onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary)
+                colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary),
+                shape = RoundedCornerShape(10.dp)
             ) {
-                Text("Beli Sekarang")
+                Text("Beli Sekarang", fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {

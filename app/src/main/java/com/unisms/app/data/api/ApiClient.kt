@@ -3,6 +3,7 @@ package com.unisms.app.data.api
 import com.unisms.app.data.model.ActivationOrderV2
 import com.unisms.app.data.model.CountryItem
 import com.unisms.app.data.model.OtpStatus
+import com.unisms.app.data.model.ProviderItem
 import com.unisms.app.data.model.Resource
 import com.unisms.app.data.model.ServiceItem
 import com.unisms.app.ui.util.CountryCatalog
@@ -114,6 +115,39 @@ object SmsBowerResponseParser {
                     list.add(keys.next())
                 }
             }
+        } catch (_: Exception) {}
+        return list
+    }
+
+    fun parseProvidersV3(raw: String, countryId: String, serviceCode: String): List<ProviderItem> {
+        val trimmed = raw.trim()
+        if (!trimmed.startsWith("{")) return emptyList()
+        val list = mutableListOf<ProviderItem>()
+        try {
+            val root = JSONObject(trimmed)
+            val countryObj = root.optJSONObject(countryId) ?: return emptyList()
+            val serviceObj = countryObj.optJSONObject(serviceCode) ?: return emptyList()
+
+            val providerKeys = serviceObj.keys()
+            while (providerKeys.hasNext()) {
+                val pKey = providerKeys.next()
+                val pObj = serviceObj.optJSONObject(pKey) ?: continue
+                val providerId = pObj.optString("provider_id", pKey)
+                val count = pObj.optInt("count", 0)
+                val price = pObj.optDouble("price", 0.0)
+
+                if (count > 0 || price > 0.0) {
+                    list.add(
+                        ProviderItem(
+                            id = providerId,
+                            name = "Operator #$providerId",
+                            count = count,
+                            price = price
+                        )
+                    )
+                }
+            }
+            list.sortBy { it.price }
         } catch (_: Exception) {}
         return list
     }

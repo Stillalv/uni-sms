@@ -28,11 +28,19 @@ interface SmsBowerApiService {
         @Query("service") service: String
     ): String
 
+    @GET("stubs/handler_api.php?action=getPricesV3")
+    suspend fun getPricesV3(
+        @Query("api_key") apiKey: String,
+        @Query("service") service: String,
+        @Query("country") country: String
+    ): String
+
     @GET("stubs/handler_api.php?action=getNumberV2")
     suspend fun getNumberV2(
         @Query("api_key") apiKey: String,
         @Query("service") service: String,
         @Query("country") country: String,
+        @Query("providerIds") providerIds: String? = null,
         @Query("ref") ref: String? = null
     ): String
 
