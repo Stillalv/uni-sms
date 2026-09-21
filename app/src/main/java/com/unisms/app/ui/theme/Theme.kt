@@ -1,0 +1,83 @@
+package com.unisms.app.ui.theme
+
+import android.app.Activity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+
+private val DarkColorScheme = darkColorScheme(
+    primary = IndigoPrimary,
+    onPrimary = Color.White,
+    primaryContainer = IndigoDark,
+    onPrimaryContainer = Color.White,
+    secondary = EmeraldAccent,
+    onSecondary = Color.White,
+    secondaryContainer = EmeraldDark,
+    onSecondaryContainer = Color.White,
+    tertiary = CyanInfo,
+    onTertiary = Color.White,
+    background = MidnightBg,
+    onBackground = TextPrimary,
+    surface = SurfaceDark,
+    onSurface = TextPrimary,
+    surfaceVariant = CardDark,
+    onSurfaceVariant = TextSecondary,
+    outline = BorderDark,
+    error = RubyError,
+    onError = Color.White
+)
+
+private val LightColorScheme = lightColorScheme(
+    primary = IndigoPrimary,
+    onPrimary = Color.White,
+    primaryContainer = IndigoLight,
+    onPrimaryContainer = Color.White,
+    secondary = EmeraldAccent,
+    onSecondary = Color.White,
+    secondaryContainer = EmeraldLight,
+    onSecondaryContainer = Color.White,
+    tertiary = CyanInfo,
+    onTertiary = Color.White,
+    background = Color(0xFFF8FAFC),
+    onBackground = Color(0xFF0F172A),
+    surface = Color.White,
+    onSurface = Color(0xFF0F172A),
+    surfaceVariant = Color(0xFFF1F5F9),
+    onSurfaceVariant = Color(0xFF475569),
+    outline = Color(0xFFCBD5E1),
+    error = RubyError,
+    onError = Color.White
+)
+
+@Composable
+fun UniSmsTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val view = LocalView.current
+
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = colorScheme.background.toArgb()
+            window.navigationBarColor = colorScheme.background.toArgb()
+            val insetsController = WindowCompat.getInsetsController(window, view)
+            insetsController.isAppearanceLightStatusBars = !darkTheme
+            insetsController.isAppearanceLightNavigationBars = !darkTheme
+        }
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+}
