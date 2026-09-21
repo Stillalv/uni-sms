@@ -695,11 +695,12 @@ fun ConfirmBuyDialog(
                         }
                         items(providers) { provider ->
                             val isSel = selectedProvider?.id == provider.id
+                            val priceStr = String.format(Locale.US, "$%.2f", provider.price)
                             FilterChip(
                                 selected = isSel,
                                 onClick = { onProviderSelected(provider) },
                                 label = {
-                                    Text("${provider.name} ($${String.format(Locale.US, \"%.2f\", provider.price)} · ${provider.count} pcs)")
+                                    Text("${provider.name} ($priceStr · ${provider.count} pcs)")
                                 },
                                 colors = FilterChipDefaults.filterChipColors(
                                     selectedContainerColor = IndigoPrimary,
