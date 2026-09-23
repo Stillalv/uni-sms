@@ -11,208 +11,208 @@ object CountryCatalog {
     )
 
     private val catalog = mapOf(
-        "74" to CountryMeta("Afghanistan", "af", "🇦🇫", "+93")
-        "155" to CountryMeta("Albania", "al", "🇦🇱", "+")
-        "58" to CountryMeta("Algeria", "dz", "🇩🇿", "+213")
-        "76" to CountryMeta("Angola", "ao", "🇦🇴", "+244")
-        "181" to CountryMeta("Anguilla", "ai", "🇦🇮", "+")
-        "169" to CountryMeta("Antigua and Barbuda", "ag", "🇦🇬", "+")
-        "39" to CountryMeta("Argentinas", "ar", "🇦🇷", "+54")
-        "148" to CountryMeta("Armenia", "am", "🇦🇲", "+")
-        "179" to CountryMeta("Aruba", "aw", "🇦🇼", "+")
-        "175" to CountryMeta("Australia", "au", "🇦🇺", "+61")
-        "50" to CountryMeta("Austria", "at", "🇦🇹", "+43")
-        "35" to CountryMeta("Azerbaijan", "az", "🇦🇿", "+994")
-        "122" to CountryMeta("Bahamas", "bs", "🇧🇸", "+")
-        "145" to CountryMeta("Bahrain", "bh", "🇧🇭", "+")
-        "60" to CountryMeta("Bangladesh", "bd", "🇧🇩", "+880")
-        "118" to CountryMeta("Barbados", "bb", "🇧🇧", "+")
-        "51" to CountryMeta("Belarus", "by", "🇧🇾", "+375")
-        "82" to CountryMeta("Belgium", "be", "🇧🇪", "+32")
-        "124" to CountryMeta("Belize", "bz", "🇧🇿", "+")
-        "120" to CountryMeta("Benin", "bj", "🇧🇯", "+")
-        "1003" to CountryMeta("Bermuda", "bm", "🇧🇲", "+1441")
-        "158" to CountryMeta("Bhutan", "bt", "🇧🇹", "+")
-        "92" to CountryMeta("Bolivia", "bo", "🇧🇴", "+591")
-        "108" to CountryMeta("Bosnia and Herzegovina", "ba", "🇧🇦", "+")
-        "123" to CountryMeta("Botswana", "bw", "🇧🇼", "+")
-        "73" to CountryMeta("Brazil", "br", "🇧🇷", "+55")
-        "121" to CountryMeta("Brunei Darussalam", "bn", "🇧🇳", "+")
-        "83" to CountryMeta("Bulgaria", "bg", "🇧🇬", "+359")
-        "152" to CountryMeta("Burkina Faso", "bf", "🇧🇫", "+")
-        "119" to CountryMeta("Burundi", "bi", "🇧🇮", "+")
-        "24" to CountryMeta("Cambodia", "kh", "🇰🇭", "+855")
-        "41" to CountryMeta("Cameroon", "cm", "🇨🇲", "+237")
-        "36" to CountryMeta("Canada", "ca", "🇨🇦", "+1")
-        "186" to CountryMeta("Cape Verde", "cv", "🇨🇻", "+")
-        "170" to CountryMeta("Cayman islands", "ky", "🇰🇾", "+")
-        "125" to CountryMeta("Central African Republic", "cf", "🇨🇫", "+")
-        "42" to CountryMeta("Chad", "td", "🇹🇩", "+235")
-        "151" to CountryMeta("Chile", "cl", "🇨🇱", "+56")
-        "3" to CountryMeta("China", "cn", "🇨🇳", "+86")
-        "33" to CountryMeta("Colombia", "co", "🇨🇴", "+57")
-        "133" to CountryMeta("Comoros", "km", "🇰🇲", "+")
-        "150" to CountryMeta("Congo", "cg", "🇨🇬", "+242")
-        "18" to CountryMeta("Congo (Dem. Republic)", "cd", "🇨🇩", "+")
-        "93" to CountryMeta("Costa Rica", "cr", "🇨🇷", "+506")
-        "27" to CountryMeta("Cote d`Ivoire Ivory Coast", "ci", "🇨🇮", "+225")
-        "45" to CountryMeta("Croatia", "hr", "🇭🇷", "+385")
-        "113" to CountryMeta("Cuba", "cu", "🇨🇺", "+")
-        "77" to CountryMeta("Cyprus", "cy", "🇨🇾", "+357")
-        "63" to CountryMeta("Czech Republic", "cz", "🇨🇿", "+420")
-        "172" to CountryMeta("Denmark", "dk", "🇩🇰", "+45")
-        "168" to CountryMeta("Djibouti", "dj", "🇩🇯", "+")
-        "126" to CountryMeta("Dominica", "dm", "🇩🇲", "+")
-        "109" to CountryMeta("Dominican Republic", "do", "🇩🇴", "+1809")
-        "105" to CountryMeta("Ecuador", "ec", "🇪🇨", "+593")
-        "21" to CountryMeta("Egypt", "eg", "🇪🇬", "+20")
-        "101" to CountryMeta("El Salvador", "sv", "🇸🇻", "+503")
-        "167" to CountryMeta("Equatorial Guinea", "gq", "🇬🇶", "+")
-        "176" to CountryMeta("Eritrea", "er", "🇪🇷", "+")
-        "34" to CountryMeta("Estonia", "ee", "🇪🇪", "+372")
-        "71" to CountryMeta("Ethiopia", "et", "🇪🇹", "+251")
-        "189" to CountryMeta("Fiji", "fj", "🇫🇯", "+")
-        "163" to CountryMeta("Finland", "fi", "🇫🇮", "+358")
-        "78" to CountryMeta("France", "fr", "🇫🇷", "+33")
-        "162" to CountryMeta("French Guiana", "gf", "🇬🇫", "+")
-        "154" to CountryMeta("Gabon", "ga", "🇬🇦", "+")
-        "28" to CountryMeta("Gambia", "gm", "🇬🇲", "+220")
-        "128" to CountryMeta("Georgia", "ge", "🇬🇪", "+995")
-        "43" to CountryMeta("Germany", "de", "🇩🇪", "+49")
-        "38" to CountryMeta("Ghana", "gh", "🇬🇭", "+233")
-        "201" to CountryMeta("Gibraltar", "gib", "🌐", "+")
-        "129" to CountryMeta("Greece", "gr", "🇬🇷", "+30")
-        "1008" to CountryMeta("Greenland", "gl", "🇬🇱", "+299")
-        "127" to CountryMeta("Grenada", "gd", "🇬🇩", "+")
-        "160" to CountryMeta("Guadeloupe", "gp", "🇬🇵", "+")
-        "94" to CountryMeta("Guatemala", "gt", "🇬🇹", "+502")
-        "68" to CountryMeta("Guinea", "gn", "🇬🇳", "+224")
-        "130" to CountryMeta("Guinea-Bissau", "gw", "🇬🇼", "+")
-        "131" to CountryMeta("Guyana", "gy", "🇬🇾", "+")
-        "26" to CountryMeta("Haiti", "ht", "🇭🇹", "+509")
-        "88" to CountryMeta("Honduras", "hn", "🇭🇳", "+504")
-        "14" to CountryMeta("Hong Kong", "hk", "🇭🇰", "+852")
-        "84" to CountryMeta("Hungary", "hu", "🇭🇺", "+36")
-        "132" to CountryMeta("Iceland", "is", "🇮🇸", "+")
-        "22" to CountryMeta("India", "in", "🇮🇳", "+91")
-        "6" to CountryMeta("Indonesia", "id", "🇮🇩", "+62")
-        "57" to CountryMeta("Iran", "ir", "🇮🇷", "+98")
-        "47" to CountryMeta("Iraq", "iq", "🇮🇶", "+964")
-        "23" to CountryMeta("Ireland", "ie", "🇮🇪", "+353")
-        "13" to CountryMeta("Israel", "il", "🇮🇱", "+972")
-        "86" to CountryMeta("Italy", "it", "🇮🇹", "+39")
-        "103" to CountryMeta("Jamaica", "jm", "🇯🇲", "+")
-        "1001" to CountryMeta("Japan", "jp", "🇯🇵", "+81")
-        "116" to CountryMeta("Jordan", "jo", "🇯🇴", "+962")
-        "2" to CountryMeta("Kazakhstan", "kz", "🇰🇿", "+7")
-        "8" to CountryMeta("Kenya", "ke", "🇰🇪", "+254")
-        "1002" to CountryMeta("Korea", "kr", "🇰🇷", "+82")
-        "1004" to CountryMeta("Kosovo", "xk", "🇽🇰", "+383")
-        "100" to CountryMeta("Kuwait", "kw", "🇰🇼", "+")
-        "11" to CountryMeta("Kyrgyzstan", "kg", "🇰🇬", "+996")
-        "25" to CountryMeta("Lao People`s", "la", "🇱🇦", "+856")
-        "49" to CountryMeta("Latvia", "lv", "🇱🇻", "+371")
-        "153" to CountryMeta("Lebanon", "lb", "🇱🇧", "+")
-        "136" to CountryMeta("Lesotho", "ls", "🇱🇸", "+")
-        "135" to CountryMeta("Liberia", "lr", "🇱🇷", "+")
-        "102" to CountryMeta("Libya", "ly", "🇱🇾", "+")
-        "1005" to CountryMeta("Liechtenstein", "li", "🇱🇮", "+423")
-        "44" to CountryMeta("Lithuania", "lt", "🇱🇹", "+370")
-        "165" to CountryMeta("Luxembourg", "lu", "🇱🇺", "+")
-        "20" to CountryMeta("Macau", "mo", "🇲🇴", "+853")
-        "183" to CountryMeta("Macedonia", "mk", "🇲🇰", "+")
-        "17" to CountryMeta("Madagascar", "mg", "🇲🇬", "+261")
-        "137" to CountryMeta("Malawi", "mw", "🇲🇼", "+")
-        "7" to CountryMeta("Malaysia", "my", "🇲🇾", "+60")
-        "159" to CountryMeta("Maldives", "mv", "🇲🇻", "+")
-        "69" to CountryMeta("Mali", "ml", "🇲🇱", "+223")
-        "199" to CountryMeta("Malta", "mt", "🇲🇹", "+")
-        "1011" to CountryMeta("Martinique", "mq", "🇲🇶", "+596")
-        "114" to CountryMeta("Mauritania", "mr", "🇲🇷", "+")
-        "157" to CountryMeta("Mauritius", "mu", "🇲🇺", "+")
-        "54" to CountryMeta("Mexico", "mx", "🇲🇽", "+52")
-        "85" to CountryMeta("Moldova, Republic of", "md", "🇲🇩", "+")
-        "144" to CountryMeta("Monaco", "mc", "🇲🇨", "+")
-        "72" to CountryMeta("Mongolia", "mn", "🇲🇳", "+976")
-        "171" to CountryMeta("Montenegro", "me", "🇲🇪", "+")
-        "180" to CountryMeta("Montserrat", "ms", "🇲🇸", "+")
-        "37" to CountryMeta("Morocco", "ma", "🇲🇦", "+212")
-        "80" to CountryMeta("Mozambique", "mz", "🇲🇿", "+258")
-        "5" to CountryMeta("Myanmar", "mm", "🇲🇲", "+95")
-        "138" to CountryMeta("Namibia", "na", "🇳🇦", "+264")
-        "81" to CountryMeta("Nepal", "np", "🇳🇵", "+977")
-        "48" to CountryMeta("Netherlands", "nl", "🇳🇱", "+31")
-        "185" to CountryMeta("New Caledonia", "nc", "🇳🇨", "+")
-        "67" to CountryMeta("New Zealand", "nz", "🇳🇿", "+64")
-        "90" to CountryMeta("Nicaragua", "ni", "🇳🇮", "+505")
-        "139" to CountryMeta("Niger", "ne", "🇳🇪", "+")
-        "19" to CountryMeta("Nigeria", "ng", "🇳🇬", "+234")
-        "204" to CountryMeta("Niue", "niu", "🌐", "+")
-        "174" to CountryMeta("Norway", "no", "🇳🇴", "+47")
-        "107" to CountryMeta("Oman", "om", "🇴🇲", "+")
-        "66" to CountryMeta("Pakistan", "pk", "🇵🇰", "+92")
-        "188" to CountryMeta("Palestine", "ps", "🇵🇸", "+")
-        "112" to CountryMeta("Panama", "pa", "🇵🇦", "+507")
-        "79" to CountryMeta("Papua new gvineya", "pg", "🇵🇬", "+675")
-        "87" to CountryMeta("Paraguay", "py", "🇵🇾", "+595")
-        "65" to CountryMeta("Peru ", "pe", "🇵🇪", "+51")
-        "4" to CountryMeta("Philippines", "ph", "🇵🇭", "+63")
-        "15" to CountryMeta("Poland", "pl", "🇵🇱", "+48")
-        "117" to CountryMeta("Portugal", "pt", "🇵🇹", "+351")
-        "97" to CountryMeta("Puerto Rico", "pr", "🇵🇷", "+")
-        "111" to CountryMeta("Qatar", "qa", "🇶🇦", "+")
-        "146" to CountryMeta("Reunion", "re", "🇷🇪", "+")
-        "32" to CountryMeta("Romania", "ro", "🇷🇴", "+40")
-        "0" to CountryMeta("Russian Federation", "ru", "🇷🇺", "+7")
-        "140" to CountryMeta("Rwanda", "rw", "🇷🇼", "+")
-        "134" to CountryMeta("Saint Kitts and Nevis", "kn", "🇰🇳", "+")
-        "164" to CountryMeta("Saint Lucia", "lc", "🇱🇨", "+")
-        "166" to CountryMeta("Saint Vincent", "vc", "🇻🇨", "+")
-        "178" to CountryMeta("Sao Tome and Principe", "st", "🇸🇹", "+")
-        "53" to CountryMeta("Saudi Arabia", "sa", "🇸🇦", "+966")
-        "61" to CountryMeta("Senegal", "sn", "🇸🇳", "+221")
-        "29" to CountryMeta("Serbia", "rs", "🇷🇸", "+381")
-        "184" to CountryMeta("Seychelles", "sc", "🇸🇨", "+")
-        "115" to CountryMeta("Sierra Leone", "sl", "🇸🇱", "+")
-        "196" to CountryMeta("Singapore", "sg", "🇸🇬", "+65")
-        "1006" to CountryMeta("Sint Maarten", "sx", "🇸🇽", "+1721")
-        "141" to CountryMeta("Slovakia", "sk", "🇸🇰", "+")
-        "59" to CountryMeta("Slovenia", "si", "🇸🇮", "+386")
-        "149" to CountryMeta("Somalia", "so", "🇸🇴", "+")
-        "31" to CountryMeta("South Africa", "za", "🇿🇦", "+27")
-        "177" to CountryMeta("South Sudan", "ss", "🇸🇸", "+")
-        "56" to CountryMeta("Spain", "es", "🇪🇸", "+34")
-        "64" to CountryMeta("Sri Lanka", "lk", "🇱🇰", "+94")
-        "1010" to CountryMeta("Sudan", "sd", "🇸🇩", "+249")
-        "142" to CountryMeta("Suriname", "sr", "🇸🇷", "+")
-        "106" to CountryMeta("Swaziland", "sz", "🇸🇿", "+")
-        "46" to CountryMeta("Sweden", "se", "🇸🇪", "+46")
-        "173" to CountryMeta("Switzerland", "ch", "🇨🇭", "+41")
-        "1333" to CountryMeta("Syrian Arab Republic", "sy", "🇸🇾", "+963")
-        "55" to CountryMeta("Taiwan", "tw", "🇹🇼", "+886")
-        "143" to CountryMeta("Tajikistan", "tj", "🇹🇯", "+")
-        "9" to CountryMeta("Tanzania", "tz", "🇹🇿", "+255")
-        "52" to CountryMeta("Thailand", "th", "🇹🇭", "+66")
-        "91" to CountryMeta("Timor-Leste", "tl", "🇹🇱", "+670")
-        "99" to CountryMeta("Togo", "tg", "🇹🇬", "+")
-        "104" to CountryMeta("Trinidad and Tobago", "tt", "🇹🇹", "+")
-        "89" to CountryMeta("Tunisia", "tn", "🇹🇳", "+216")
-        "62" to CountryMeta("Turkey", "tr", "🇹🇷", "+90")
-        "161" to CountryMeta("Turkmenistan", "tm", "🇹🇲", "+")
-        "75" to CountryMeta("Uganda", "ug", "🇺🇬", "+256")
-        "1" to CountryMeta("Ukraine", "ua", "🇺🇦", "+380")
-        "95" to CountryMeta("United Arab Emirates", "ae", "🇦🇪", "+971")
-        "16" to CountryMeta("United Kingdom", "gb", "🇬🇧", "+44")
-        "187" to CountryMeta("United States", "us", "🇺🇸", "+1")
-        "12" to CountryMeta("United States (virtual)", "us", "🇺🇸", "+1")
-        "156" to CountryMeta("Uruguay", "uy", "🇺🇾", "+598")
-        "40" to CountryMeta("Uzbekistan", "uz", "🇺🇿", "+998")
-        "1007" to CountryMeta("Vanuatu", "vu", "🇻🇺", "+678")
-        "70" to CountryMeta("Venezuela", "ve", "🇻🇪", "+58")
-        "10" to CountryMeta("Viet nam", "vn", "🇻🇳", "+84")
-        "30" to CountryMeta("Yemen", "ye", "🇾🇪", "+967")
-        "147" to CountryMeta("Zambia", "zm", "🇿🇲", "+260")
-        "96" to CountryMeta("Zimbabwe", "zw", "🇿🇼", "+263")
+        "74" to CountryMeta("Afghanistan", "af", "🇦🇫", "+93"),
+        "155" to CountryMeta("Albania", "al", "🇦🇱", "+"),
+        "58" to CountryMeta("Algeria", "dz", "🇩🇿", "+213"),
+        "76" to CountryMeta("Angola", "ao", "🇦🇴", "+244"),
+        "181" to CountryMeta("Anguilla", "ai", "🇦🇮", "+"),
+        "169" to CountryMeta("Antigua and Barbuda", "ag", "🇦🇬", "+"),
+        "39" to CountryMeta("Argentinas", "ar", "🇦🇷", "+54"),
+        "148" to CountryMeta("Armenia", "am", "🇦🇲", "+"),
+        "179" to CountryMeta("Aruba", "aw", "🇦🇼", "+"),
+        "175" to CountryMeta("Australia", "au", "🇦🇺", "+61"),
+        "50" to CountryMeta("Austria", "at", "🇦🇹", "+43"),
+        "35" to CountryMeta("Azerbaijan", "az", "🇦🇿", "+994"),
+        "122" to CountryMeta("Bahamas", "bs", "🇧🇸", "+"),
+        "145" to CountryMeta("Bahrain", "bh", "🇧🇭", "+"),
+        "60" to CountryMeta("Bangladesh", "bd", "🇧🇩", "+880"),
+        "118" to CountryMeta("Barbados", "bb", "🇧🇧", "+"),
+        "51" to CountryMeta("Belarus", "by", "🇧🇾", "+375"),
+        "82" to CountryMeta("Belgium", "be", "🇧🇪", "+32"),
+        "124" to CountryMeta("Belize", "bz", "🇧🇿", "+"),
+        "120" to CountryMeta("Benin", "bj", "🇧🇯", "+"),
+        "1003" to CountryMeta("Bermuda", "bm", "🇧🇲", "+1441"),
+        "158" to CountryMeta("Bhutan", "bt", "🇧🇹", "+"),
+        "92" to CountryMeta("Bolivia", "bo", "🇧🇴", "+591"),
+        "108" to CountryMeta("Bosnia and Herzegovina", "ba", "🇧🇦", "+"),
+        "123" to CountryMeta("Botswana", "bw", "🇧🇼", "+"),
+        "73" to CountryMeta("Brazil", "br", "🇧🇷", "+55"),
+        "121" to CountryMeta("Brunei Darussalam", "bn", "🇧🇳", "+"),
+        "83" to CountryMeta("Bulgaria", "bg", "🇧🇬", "+359"),
+        "152" to CountryMeta("Burkina Faso", "bf", "🇧🇫", "+"),
+        "119" to CountryMeta("Burundi", "bi", "🇧🇮", "+"),
+        "24" to CountryMeta("Cambodia", "kh", "🇰🇭", "+855"),
+        "41" to CountryMeta("Cameroon", "cm", "🇨🇲", "+237"),
+        "36" to CountryMeta("Canada", "ca", "🇨🇦", "+1"),
+        "186" to CountryMeta("Cape Verde", "cv", "🇨🇻", "+"),
+        "170" to CountryMeta("Cayman islands", "ky", "🇰🇾", "+"),
+        "125" to CountryMeta("Central African Republic", "cf", "🇨🇫", "+"),
+        "42" to CountryMeta("Chad", "td", "🇹🇩", "+235"),
+        "151" to CountryMeta("Chile", "cl", "🇨🇱", "+56"),
+        "3" to CountryMeta("China", "cn", "🇨🇳", "+86"),
+        "33" to CountryMeta("Colombia", "co", "🇨🇴", "+57"),
+        "133" to CountryMeta("Comoros", "km", "🇰🇲", "+"),
+        "150" to CountryMeta("Congo", "cg", "🇨🇬", "+242"),
+        "18" to CountryMeta("Congo (Dem. Republic)", "cd", "🇨🇩", "+"),
+        "93" to CountryMeta("Costa Rica", "cr", "🇨🇷", "+506"),
+        "27" to CountryMeta("Cote d`Ivoire Ivory Coast", "ci", "🇨🇮", "+225"),
+        "45" to CountryMeta("Croatia", "hr", "🇭🇷", "+385"),
+        "113" to CountryMeta("Cuba", "cu", "🇨🇺", "+"),
+        "77" to CountryMeta("Cyprus", "cy", "🇨🇾", "+357"),
+        "63" to CountryMeta("Czech Republic", "cz", "🇨🇿", "+420"),
+        "172" to CountryMeta("Denmark", "dk", "🇩🇰", "+45"),
+        "168" to CountryMeta("Djibouti", "dj", "🇩🇯", "+"),
+        "126" to CountryMeta("Dominica", "dm", "🇩🇲", "+"),
+        "109" to CountryMeta("Dominican Republic", "do", "🇩🇴", "+1809"),
+        "105" to CountryMeta("Ecuador", "ec", "🇪🇨", "+593"),
+        "21" to CountryMeta("Egypt", "eg", "🇪🇬", "+20"),
+        "101" to CountryMeta("El Salvador", "sv", "🇸🇻", "+503"),
+        "167" to CountryMeta("Equatorial Guinea", "gq", "🇬🇶", "+"),
+        "176" to CountryMeta("Eritrea", "er", "🇪🇷", "+"),
+        "34" to CountryMeta("Estonia", "ee", "🇪🇪", "+372"),
+        "71" to CountryMeta("Ethiopia", "et", "🇪🇹", "+251"),
+        "189" to CountryMeta("Fiji", "fj", "🇫🇯", "+"),
+        "163" to CountryMeta("Finland", "fi", "🇫🇮", "+358"),
+        "78" to CountryMeta("France", "fr", "🇫🇷", "+33"),
+        "162" to CountryMeta("French Guiana", "gf", "🇬🇫", "+"),
+        "154" to CountryMeta("Gabon", "ga", "🇬🇦", "+"),
+        "28" to CountryMeta("Gambia", "gm", "🇬🇲", "+220"),
+        "128" to CountryMeta("Georgia", "ge", "🇬🇪", "+995"),
+        "43" to CountryMeta("Germany", "de", "🇩🇪", "+49"),
+        "38" to CountryMeta("Ghana", "gh", "🇬🇭", "+233"),
+        "201" to CountryMeta("Gibraltar", "gib", "🌐", "+"),
+        "129" to CountryMeta("Greece", "gr", "🇬🇷", "+30"),
+        "1008" to CountryMeta("Greenland", "gl", "🇬🇱", "+299"),
+        "127" to CountryMeta("Grenada", "gd", "🇬🇩", "+"),
+        "160" to CountryMeta("Guadeloupe", "gp", "🇬🇵", "+"),
+        "94" to CountryMeta("Guatemala", "gt", "🇬🇹", "+502"),
+        "68" to CountryMeta("Guinea", "gn", "🇬🇳", "+224"),
+        "130" to CountryMeta("Guinea-Bissau", "gw", "🇬🇼", "+"),
+        "131" to CountryMeta("Guyana", "gy", "🇬🇾", "+"),
+        "26" to CountryMeta("Haiti", "ht", "🇭🇹", "+509"),
+        "88" to CountryMeta("Honduras", "hn", "🇭🇳", "+504"),
+        "14" to CountryMeta("Hong Kong", "hk", "🇭🇰", "+852"),
+        "84" to CountryMeta("Hungary", "hu", "🇭🇺", "+36"),
+        "132" to CountryMeta("Iceland", "is", "🇮🇸", "+"),
+        "22" to CountryMeta("India", "in", "🇮🇳", "+91"),
+        "6" to CountryMeta("Indonesia", "id", "🇮🇩", "+62"),
+        "57" to CountryMeta("Iran", "ir", "🇮🇷", "+98"),
+        "47" to CountryMeta("Iraq", "iq", "🇮🇶", "+964"),
+        "23" to CountryMeta("Ireland", "ie", "🇮🇪", "+353"),
+        "13" to CountryMeta("Israel", "il", "🇮🇱", "+972"),
+        "86" to CountryMeta("Italy", "it", "🇮🇹", "+39"),
+        "103" to CountryMeta("Jamaica", "jm", "🇯🇲", "+"),
+        "1001" to CountryMeta("Japan", "jp", "🇯🇵", "+81"),
+        "116" to CountryMeta("Jordan", "jo", "🇯🇴", "+962"),
+        "2" to CountryMeta("Kazakhstan", "kz", "🇰🇿", "+7"),
+        "8" to CountryMeta("Kenya", "ke", "🇰🇪", "+254"),
+        "1002" to CountryMeta("Korea", "kr", "🇰🇷", "+82"),
+        "1004" to CountryMeta("Kosovo", "xk", "🇽🇰", "+383"),
+        "100" to CountryMeta("Kuwait", "kw", "🇰🇼", "+"),
+        "11" to CountryMeta("Kyrgyzstan", "kg", "🇰🇬", "+996"),
+        "25" to CountryMeta("Lao People`s", "la", "🇱🇦", "+856"),
+        "49" to CountryMeta("Latvia", "lv", "🇱🇻", "+371"),
+        "153" to CountryMeta("Lebanon", "lb", "🇱🇧", "+"),
+        "136" to CountryMeta("Lesotho", "ls", "🇱🇸", "+"),
+        "135" to CountryMeta("Liberia", "lr", "🇱🇷", "+"),
+        "102" to CountryMeta("Libya", "ly", "🇱🇾", "+"),
+        "1005" to CountryMeta("Liechtenstein", "li", "🇱🇮", "+423"),
+        "44" to CountryMeta("Lithuania", "lt", "🇱🇹", "+370"),
+        "165" to CountryMeta("Luxembourg", "lu", "🇱🇺", "+"),
+        "20" to CountryMeta("Macau", "mo", "🇲🇴", "+853"),
+        "183" to CountryMeta("Macedonia", "mk", "🇲🇰", "+"),
+        "17" to CountryMeta("Madagascar", "mg", "🇲🇬", "+261"),
+        "137" to CountryMeta("Malawi", "mw", "🇲🇼", "+"),
+        "7" to CountryMeta("Malaysia", "my", "🇲🇾", "+60"),
+        "159" to CountryMeta("Maldives", "mv", "🇲🇻", "+"),
+        "69" to CountryMeta("Mali", "ml", "🇲🇱", "+223"),
+        "199" to CountryMeta("Malta", "mt", "🇲🇹", "+"),
+        "1011" to CountryMeta("Martinique", "mq", "🇲🇶", "+596"),
+        "114" to CountryMeta("Mauritania", "mr", "🇲🇷", "+"),
+        "157" to CountryMeta("Mauritius", "mu", "🇲🇺", "+"),
+        "54" to CountryMeta("Mexico", "mx", "🇲🇽", "+52"),
+        "85" to CountryMeta("Moldova, Republic of", "md", "🇲🇩", "+"),
+        "144" to CountryMeta("Monaco", "mc", "🇲🇨", "+"),
+        "72" to CountryMeta("Mongolia", "mn", "🇲🇳", "+976"),
+        "171" to CountryMeta("Montenegro", "me", "🇲🇪", "+"),
+        "180" to CountryMeta("Montserrat", "ms", "🇲🇸", "+"),
+        "37" to CountryMeta("Morocco", "ma", "🇲🇦", "+212"),
+        "80" to CountryMeta("Mozambique", "mz", "🇲🇿", "+258"),
+        "5" to CountryMeta("Myanmar", "mm", "🇲🇲", "+95"),
+        "138" to CountryMeta("Namibia", "na", "🇳🇦", "+264"),
+        "81" to CountryMeta("Nepal", "np", "🇳🇵", "+977"),
+        "48" to CountryMeta("Netherlands", "nl", "🇳🇱", "+31"),
+        "185" to CountryMeta("New Caledonia", "nc", "🇳🇨", "+"),
+        "67" to CountryMeta("New Zealand", "nz", "🇳🇿", "+64"),
+        "90" to CountryMeta("Nicaragua", "ni", "🇳🇮", "+505"),
+        "139" to CountryMeta("Niger", "ne", "🇳🇪", "+"),
+        "19" to CountryMeta("Nigeria", "ng", "🇳🇬", "+234"),
+        "204" to CountryMeta("Niue", "niu", "🌐", "+"),
+        "174" to CountryMeta("Norway", "no", "🇳🇴", "+47"),
+        "107" to CountryMeta("Oman", "om", "🇴🇲", "+"),
+        "66" to CountryMeta("Pakistan", "pk", "🇵🇰", "+92"),
+        "188" to CountryMeta("Palestine", "ps", "🇵🇸", "+"),
+        "112" to CountryMeta("Panama", "pa", "🇵🇦", "+507"),
+        "79" to CountryMeta("Papua new gvineya", "pg", "🇵🇬", "+675"),
+        "87" to CountryMeta("Paraguay", "py", "🇵🇾", "+595"),
+        "65" to CountryMeta("Peru ", "pe", "🇵🇪", "+51"),
+        "4" to CountryMeta("Philippines", "ph", "🇵🇭", "+63"),
+        "15" to CountryMeta("Poland", "pl", "🇵🇱", "+48"),
+        "117" to CountryMeta("Portugal", "pt", "🇵🇹", "+351"),
+        "97" to CountryMeta("Puerto Rico", "pr", "🇵🇷", "+"),
+        "111" to CountryMeta("Qatar", "qa", "🇶🇦", "+"),
+        "146" to CountryMeta("Reunion", "re", "🇷🇪", "+"),
+        "32" to CountryMeta("Romania", "ro", "🇷🇴", "+40"),
+        "0" to CountryMeta("Russian Federation", "ru", "🇷🇺", "+7"),
+        "140" to CountryMeta("Rwanda", "rw", "🇷🇼", "+"),
+        "134" to CountryMeta("Saint Kitts and Nevis", "kn", "🇰🇳", "+"),
+        "164" to CountryMeta("Saint Lucia", "lc", "🇱🇨", "+"),
+        "166" to CountryMeta("Saint Vincent", "vc", "🇻🇨", "+"),
+        "178" to CountryMeta("Sao Tome and Principe", "st", "🇸🇹", "+"),
+        "53" to CountryMeta("Saudi Arabia", "sa", "🇸🇦", "+966"),
+        "61" to CountryMeta("Senegal", "sn", "🇸🇳", "+221"),
+        "29" to CountryMeta("Serbia", "rs", "🇷🇸", "+381"),
+        "184" to CountryMeta("Seychelles", "sc", "🇸🇨", "+"),
+        "115" to CountryMeta("Sierra Leone", "sl", "🇸🇱", "+"),
+        "196" to CountryMeta("Singapore", "sg", "🇸🇬", "+65"),
+        "1006" to CountryMeta("Sint Maarten", "sx", "🇸🇽", "+1721"),
+        "141" to CountryMeta("Slovakia", "sk", "🇸🇰", "+"),
+        "59" to CountryMeta("Slovenia", "si", "🇸🇮", "+386"),
+        "149" to CountryMeta("Somalia", "so", "🇸🇴", "+"),
+        "31" to CountryMeta("South Africa", "za", "🇿🇦", "+27"),
+        "177" to CountryMeta("South Sudan", "ss", "🇸🇸", "+"),
+        "56" to CountryMeta("Spain", "es", "🇪🇸", "+34"),
+        "64" to CountryMeta("Sri Lanka", "lk", "🇱🇰", "+94"),
+        "1010" to CountryMeta("Sudan", "sd", "🇸🇩", "+249"),
+        "142" to CountryMeta("Suriname", "sr", "🇸🇷", "+"),
+        "106" to CountryMeta("Swaziland", "sz", "🇸🇿", "+"),
+        "46" to CountryMeta("Sweden", "se", "🇸🇪", "+46"),
+        "173" to CountryMeta("Switzerland", "ch", "🇨🇭", "+41"),
+        "1333" to CountryMeta("Syrian Arab Republic", "sy", "🇸🇾", "+963"),
+        "55" to CountryMeta("Taiwan", "tw", "🇹🇼", "+886"),
+        "143" to CountryMeta("Tajikistan", "tj", "🇹🇯", "+"),
+        "9" to CountryMeta("Tanzania", "tz", "🇹🇿", "+255"),
+        "52" to CountryMeta("Thailand", "th", "🇹🇭", "+66"),
+        "91" to CountryMeta("Timor-Leste", "tl", "🇹🇱", "+670"),
+        "99" to CountryMeta("Togo", "tg", "🇹🇬", "+"),
+        "104" to CountryMeta("Trinidad and Tobago", "tt", "🇹🇹", "+"),
+        "89" to CountryMeta("Tunisia", "tn", "🇹🇳", "+216"),
+        "62" to CountryMeta("Turkey", "tr", "🇹🇷", "+90"),
+        "161" to CountryMeta("Turkmenistan", "tm", "🇹🇲", "+"),
+        "75" to CountryMeta("Uganda", "ug", "🇺🇬", "+256"),
+        "1" to CountryMeta("Ukraine", "ua", "🇺🇦", "+380"),
+        "95" to CountryMeta("United Arab Emirates", "ae", "🇦🇪", "+971"),
+        "16" to CountryMeta("United Kingdom", "gb", "🇬🇧", "+44"),
+        "187" to CountryMeta("United States", "us", "🇺🇸", "+1"),
+        "12" to CountryMeta("United States (virtual)", "us", "🇺🇸", "+1"),
+        "156" to CountryMeta("Uruguay", "uy", "🇺🇾", "+598"),
+        "40" to CountryMeta("Uzbekistan", "uz", "🇺🇿", "+998"),
+        "1007" to CountryMeta("Vanuatu", "vu", "🇻🇺", "+678"),
+        "70" to CountryMeta("Venezuela", "ve", "🇻🇪", "+58"),
+        "10" to CountryMeta("Viet nam", "vn", "🇻🇳", "+84"),
+        "30" to CountryMeta("Yemen", "ye", "🇾🇪", "+967"),
+        "147" to CountryMeta("Zambia", "zm", "🇿🇲", "+260"),
+        "96" to CountryMeta("Zimbabwe", "zw", "🇿🇼", "+263"),
     )
 
     fun getCountry(id: String, cost: Double = 0.0, count: Int = 0): CountryItem {

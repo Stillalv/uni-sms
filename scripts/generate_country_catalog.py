@@ -47,13 +47,13 @@ for c in data:
         title = c.get('title', f'Country #{org_code}').replace('"', '\\"')
         dial = dial_codes.get(iso, '+')
         flag = iso_to_flag(iso)
-        entries.append(f'        "{org_code}" to CountryMeta("{title}", "{iso.lower()}", "{flag}", "{dial}")')
+        entries.append(f'        "{org_code}" to CountryMeta("{title}", "{iso.lower()}", "{flag}", "{dial}"),')
 
 # Also ensure "12" is United States (Virtual) and "0" is Russia
 if "12" not in seen_codes:
-    entries.append('        "12" to CountryMeta("USA (Virtual)", "us", "🇺🇸", "+1")')
+    entries.append('        "12" to CountryMeta("United States (virtual)", "us", "🇺🇸", "+1"),')
 if "0" not in seen_codes:
-    entries.append('        "0" to CountryMeta("Russia", "ru", "🇷🇺", "+7")')
+    entries.append('        "0" to CountryMeta("Russia", "ru", "🇷🇺", "+7"),')
 
 lines_kt = "\n".join(entries)
 
