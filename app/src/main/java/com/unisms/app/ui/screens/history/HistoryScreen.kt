@@ -72,7 +72,7 @@ fun HistoryScreen(
     onBackClick: () -> Unit,
     onNavigateToActiveOtp: (Long) -> Unit
 ) {
-    val records by viewModel.filteredRecords.collectAsState()
+    val records by viewModel.historyRecords.collectAsState()
     val currentFilter by viewModel.filter.collectAsState()
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current

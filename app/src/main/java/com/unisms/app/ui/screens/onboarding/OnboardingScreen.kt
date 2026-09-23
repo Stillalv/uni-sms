@@ -39,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -64,8 +65,8 @@ fun OnboardingScreen(
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
 
-    LaunchedEffect(uiState.isKeyValid) {
-        if (uiState.isKeyValid) {
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
             onNavigateToDashboard()
         }
     }

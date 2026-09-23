@@ -71,7 +71,6 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActiveOtpScreen(
-    activationId: Long,
     viewModel: ActiveOtpViewModel,
     onBackClick: () -> Unit
 ) {
@@ -80,14 +79,17 @@ fun ActiveOtpScreen(
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(activationId) {
-        viewModel.loadActivation(activationId)
+    LaunchedEffect(uiState.actionMessage) {
+        uiState.actionMessage?.let { msg ->
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            viewModel.clearMessages()
+        }
     }
 
-    LaunchedEffect(uiState.toastMessage) {
-        uiState.toastMessage?.let { msg ->
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { msg ->
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-            viewModel.clearToast()
+            viewModel.clearMessages()
         }
     }
 

@@ -41,7 +41,7 @@ fun AppNavGraph(
             val viewModel = rememberViewModel { OnboardingViewModel(repository) }
             OnboardingScreen(
                 viewModel = viewModel,
-                onSuccess = {
+                onNavigateToDashboard = {
                     navController.navigate(Screen.Dashboard.route) {
                         popUpTo(Screen.Onboarding.route) { inclusive = true }
                     }
