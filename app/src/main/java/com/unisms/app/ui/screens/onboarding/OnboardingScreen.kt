@@ -2,6 +2,7 @@ package com.unisms.app.ui.screens.onboarding
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,10 +19,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ContentPaste
-import androidx.compose.material.icons.filled.Key
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -48,107 +45,115 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.unisms.app.ui.theme.EmeraldAccent
-import com.unisms.app.ui.theme.IndigoPrimary
-import com.unisms.app.ui.theme.RubyError
-import com.unisms.app.ui.theme.TextPrimary
-import com.unisms.app.ui.theme.TextSecondary
+import com.unisms.app.ui.theme.AppleBlue
+import com.unisms.app.ui.theme.AppleHairline
+import com.unisms.app.ui.theme.AppleRed
+import com.unisms.app.ui.theme.AppleSecondaryBg
+import com.unisms.app.ui.theme.AppleSystemBg
+import com.unisms.app.ui.theme.AppleTertiaryBg
+import com.unisms.app.ui.theme.AppleTextPrimary
+import com.unisms.app.ui.theme.AppleTextSecondary
+import com.unisms.app.ui.theme.LucideIcons
 
 @Composable
 fun OnboardingScreen(
     viewModel: OnboardingViewModel,
-    onSuccess: () -> Unit
+    onNavigateToDashboard: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
 
-    LaunchedEffect(uiState.isSuccess) {
-        if (uiState.isSuccess) {
-            onSuccess()
+    LaunchedEffect(uiState.isKeyValid) {
+        if (uiState.isKeyValid) {
+            onNavigateToDashboard()
         }
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = AppleSystemBg
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(24.dp)
+                .padding(horizontal = 20.dp, vertical = 16.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Box(
                 modifier = Modifier
-                    .size(88.dp)
+                    .size(72.dp)
                     .clip(CircleShape)
-                    .background(IndigoPrimary.copy(alpha = 0.15f)),
+                    .background(AppleBlue.copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Default.Key,
+                    painter = LucideIcons.KeyRound,
                     contentDescription = "API Key",
-                    tint = IndigoPrimary,
-                    modifier = Modifier.size(44.dp)
+                    tint = AppleBlue,
+                    modifier = Modifier.size(36.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Selamat Datang di Uni-SMS",
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary,
+                color = AppleTextPrimary,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = "Penerima kode OTP nomor virtual instan langsung dari SMSBower dengan enkripsi keamanan perangkat.",
-                style = MaterialTheme.typography.bodyLarge,
-                color = TextSecondary,
+                text = "Penerima kode OTP nomor virtual instan langsung dari SMSBower dengan perlindungan enkripsi.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = AppleTextSecondary,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                shape = RoundedCornerShape(18.dp),
+                colors = CardDefaults.cardColors(containerColor = AppleSecondaryBg),
+                border = BorderStroke(0.5.dp, AppleHairline)
             ) {
-                Column(modifier = Modifier.padding(20.dp)) {
+                Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = "SMSBower API Key",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = TextPrimary
+                        color = AppleTextPrimary
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
 
                     OutlinedTextField(
                         value = uiState.apiKey,
                         onValueChange = { viewModel.onApiKeyChanged(it) },
-                        placeholder = { Text("Contoh: a1b2c3d4e5f6...", color = TextSecondary) },
+                        placeholder = { Text("Contoh: a1b2c3d4e5f6...", color = AppleTextSecondary, fontSize = 13.sp) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = IndigoPrimary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                            focusedBorderColor = AppleBlue,
+                            unfocusedBorderColor = AppleHairline,
+                            focusedContainerColor = AppleTertiaryBg,
+                            unfocusedContainerColor = AppleTertiaryBg
                         )
                     )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         OutlinedButton(
                             onClick = {
@@ -157,15 +162,18 @@ fun OnboardingScreen(
                                     viewModel.onApiKeyChanged(text.trim())
                                 }
                             },
-                            shape = RoundedCornerShape(10.dp)
+                            shape = RoundedCornerShape(50),
+                            border = BorderStroke(0.5.dp, AppleHairline),
+                            modifier = Modifier.height(34.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Default.ContentPaste,
+                                painter = LucideIcons.Clipboard,
                                 contentDescription = "Paste",
-                                modifier = Modifier.size(16.dp)
+                                modifier = Modifier.size(14.dp),
+                                tint = AppleTextPrimary
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Tempel")
+                            Text("Tempel", fontSize = 12.sp, color = AppleTextPrimary)
                         }
 
                         TextButton(
@@ -177,48 +185,49 @@ fun OnboardingScreen(
                                 context.startActivity(intent)
                             }
                         ) {
-                            Text("Dapatkan Key")
+                            Text("Dapatkan Key", fontSize = 12.sp, color = AppleBlue)
                             Spacer(modifier = Modifier.width(4.dp))
                             Icon(
-                                imageVector = Icons.Default.OpenInNew,
+                                painter = LucideIcons.ExternalLink,
                                 contentDescription = "Open Web",
-                                modifier = Modifier.size(16.dp)
+                                modifier = Modifier.size(13.dp),
+                                tint = AppleBlue
                             )
                         }
                     }
 
                     if (uiState.errorMessage != null) {
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = uiState.errorMessage!!,
-                            color = RubyError,
-                            style = MaterialTheme.typography.bodyMedium
+                            color = AppleRed,
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Button(
                 onClick = { viewModel.validateAndSave() },
                 enabled = !uiState.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
-                shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary)
+                    .height(46.dp),
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(containerColor = AppleBlue)
             ) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(22.dp),
+                        modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = Color.White
                     )
                 } else {
                     Text(
-                        text = "Verifikasi & Mulai",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = "Verifikasi & Masuk",
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
                 }

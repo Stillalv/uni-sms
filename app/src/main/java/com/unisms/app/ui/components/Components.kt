@@ -8,40 +8,32 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBalanceWallet
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -49,6 +41,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -62,20 +56,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.unisms.app.data.model.CountryItem
 import com.unisms.app.data.model.ProviderItem
 import com.unisms.app.data.model.ServiceItem
 import com.unisms.app.ui.theme.AmberWarning
+import com.unisms.app.ui.theme.AppleBlue
+import com.unisms.app.ui.theme.AppleGreen
+import com.unisms.app.ui.theme.AppleHairline
+import com.unisms.app.ui.theme.AppleRed
+import com.unisms.app.ui.theme.AppleSecondaryBg
+import com.unisms.app.ui.theme.AppleSeparator
+import com.unisms.app.ui.theme.AppleTertiaryBg
+import com.unisms.app.ui.theme.AppleTextMuted
+import com.unisms.app.ui.theme.AppleTextPrimary
+import com.unisms.app.ui.theme.AppleTextSecondary
 import com.unisms.app.ui.theme.CardDark
-import com.unisms.app.ui.theme.CyanInfo
 import com.unisms.app.ui.theme.EmeraldAccent
 import com.unisms.app.ui.theme.IndigoPrimary
+import com.unisms.app.ui.theme.LucideIcons
 import com.unisms.app.ui.theme.MonospaceOtpStyle
-import com.unisms.app.ui.theme.MonospacePhoneStyle
 import com.unisms.app.ui.theme.RubyError
 import com.unisms.app.ui.theme.TextMuted
 import com.unisms.app.ui.theme.TextPrimary
@@ -92,71 +99,103 @@ fun BalanceCard(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = AppleSecondaryBg),
+        border = BorderStroke(0.5.dp, AppleHairline)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .background(IndigoPrimary.copy(alpha = 0.15f)),
+                        .size(38.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(AppleBlue.copy(alpha = 0.15f))
+                        .border(0.5.dp, AppleBlue.copy(alpha = 0.25f), RoundedCornerShape(10.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.AccountBalanceWallet,
+                        painter = LucideIcons.CreditCard,
                         contentDescription = "Wallet",
-                        tint = IndigoPrimary,
-                        modifier = Modifier.size(24.dp)
+                        tint = AppleBlue,
+                        modifier = Modifier.size(20.dp)
                     )
                 }
-                Spacer(modifier = Modifier.width(14.dp))
+                Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "Saldo SMSBower",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TextSecondary
+                        text = "Saldo Akun SMSBower",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = AppleTextSecondary
                     )
-                    Text(
-                        text = if (balance != null) String.format(Locale.US, "$%.2f", balance) else "$0.00",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = EmeraldAccent
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Text(
+                            text = if (balance != null) String.format(Locale.US, "$%.2f", balance) else "$0.00",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = AppleTextPrimary
+                        )
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(50))
+                                .background(AppleGreen.copy(alpha = 0.15f))
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = "Aktif",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = AppleGreen
+                            )
+                        }
+                    }
                 }
             }
 
-            Row {
-                IconButton(onClick = onRefresh, enabled = !isLoading) {
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                IconButton(
+                    onClick = onRefresh,
+                    enabled = !isLoading,
+                    modifier = Modifier
+                        .size(34.dp)
+                        .clip(CircleShape)
+                        .background(AppleTertiaryBg)
+                ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(16.dp),
                             strokeWidth = 2.dp,
-                            color = IndigoPrimary
+                            color = AppleBlue
                         )
                     } else {
                         Icon(
-                            imageVector = Icons.Default.Refresh,
+                            painter = LucideIcons.RefreshCw,
                             contentDescription = "Refresh Saldo",
-                            tint = TextSecondary
+                            tint = AppleTextSecondary,
+                            modifier = Modifier.size(16.dp)
                         )
                     }
                 }
-                IconButton(onClick = onSettingsClick) {
+                IconButton(
+                    onClick = onSettingsClick,
+                    modifier = Modifier
+                        .size(34.dp)
+                        .clip(CircleShape)
+                        .background(AppleTertiaryBg)
+                ) {
                     Icon(
-                        imageVector = Icons.Default.Settings,
+                        painter = LucideIcons.Sliders,
                         contentDescription = "Pengaturan",
-                        tint = TextSecondary
+                        tint = AppleTextSecondary,
+                        modifier = Modifier.size(16.dp)
                     )
                 }
             }
@@ -173,21 +212,52 @@ fun ServiceFilterChip(
 ) {
     Surface(
         modifier = modifier
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(50))
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(14.dp),
-        color = if (isSelected) IndigoPrimary else CardDark,
+        shape = RoundedCornerShape(50),
+        color = if (isSelected) AppleBlue else AppleSecondaryBg,
         border = BorderStroke(
-            1.dp,
-            if (isSelected) IndigoPrimary else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+            0.5.dp,
+            if (isSelected) AppleBlue else AppleHairline
         )
     ) {
-        Text(
-            text = service.name,
-            color = if (isSelected) Color.White else TextPrimary,
-            style = MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
-        )
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(service.assetUri)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = service.name,
+                modifier = Modifier.size(15.dp),
+                contentScale = ContentScale.Fit,
+                error = {
+                    Box(
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clip(CircleShape)
+                            .background(if (isSelected) Color.White.copy(alpha = 0.2f) else AppleTertiaryBg),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = service.name.take(1).uppercase(),
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isSelected) Color.White else AppleBlue
+                        )
+                    }
+                }
+            )
+            Text(
+                text = service.name,
+                color = if (isSelected) Color.White else AppleTextPrimary,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium
+            )
+        }
     }
 }
 
@@ -200,15 +270,15 @@ fun CountryItemRow(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .clickable(onClick = onBuyClick),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+        colors = CardDefaults.cardColors(containerColor = AppleSecondaryBg),
+        border = BorderStroke(0.5.dp, AppleHairline)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 14.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -216,74 +286,73 @@ fun CountryItemRow(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = country.flagEmoji,
-                    fontSize = 28.sp,
-                    modifier = Modifier.padding(end = 12.dp)
+                // Official Vector SVG Flag with fallback to Emoji
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(country.assetUri ?: country.remoteUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = country.name,
+                    modifier = Modifier
+                        .size(width = 32.dp, height = 21.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .border(0.5.dp, AppleHairline, RoundedCornerShape(4.dp)),
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        Text(text = country.flagEmoji, fontSize = 20.sp)
+                    },
+                    error = {
+                        Text(text = country.flagEmoji, fontSize = 20.sp)
+                    }
                 )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
                 Column {
-                    Text(
-                        text = country.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = TextPrimary
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(
+                            text = country.name,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = AppleTextPrimary
+                        )
                         Text(
                             text = country.dialCode,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TextSecondary
+                            style = MaterialTheme.typography.labelSmall,
+                            color = AppleTextSecondary
                         )
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(
-                                    if (country.count > 0) EmeraldAccent.copy(alpha = 0.15f)
-                                    else RubyError.copy(alpha = 0.15f)
-                                )
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
-                            Text(
-                                text = "${country.count} pcs",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = if (country.count > 0) EmeraldAccent else RubyError,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
                     }
+                    Text(
+                        text = "${country.count} stok tersedia",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (country.count > 0) AppleGreen else AppleRed,
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
 
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
                     text = if (country.cost > 0) String.format(Locale.US, "$%.2f", country.cost) else "-",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    color = EmeraldAccent
+                    color = AppleTextPrimary
                 )
                 Button(
                     onClick = onBuyClick,
                     enabled = country.count > 0,
-                    shape = RoundedCornerShape(10.dp),
+                    shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = IndigoPrimary,
-                        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
+                        containerColor = AppleBlue,
+                        disabledContainerColor = AppleTertiaryBg
                     ),
-                    contentPadding = ButtonDefaults.ContentPadding
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                    modifier = Modifier.height(32.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.ShoppingCart,
-                        contentDescription = "Beli",
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = "Beli", style = MaterialTheme.typography.labelLarge)
+                    Text(text = "Beli", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -297,7 +366,7 @@ fun RadarPulseAnimation(
     val infiniteTransition = rememberInfiniteTransition(label = "RadarPulse")
     val scale by infiniteTransition.animateFloat(
         initialValue = 0.8f,
-        targetValue = 1.3f,
+        targetValue = 1.25f,
         animationSpec = infiniteRepeatable(
             animation = tween(1400, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
@@ -305,8 +374,8 @@ fun RadarPulseAnimation(
         label = "RadarScale"
     )
     val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.2f,
-        targetValue = 0.6f,
+        initialValue = 0.15f,
+        targetValue = 0.5f,
         animationSpec = infiniteRepeatable(
             animation = tween(1400, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
@@ -316,30 +385,30 @@ fun RadarPulseAnimation(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier.size(140.dp)
+        modifier = modifier.size(90.dp)
     ) {
         Box(
             modifier = Modifier
-                .size(120.dp)
+                .size(80.dp)
                 .graphicsLayer {
                     scaleX = scale
                     scaleY = scale
                     this.alpha = alpha
                 }
                 .clip(CircleShape)
-                .background(IndigoPrimary.copy(alpha = 0.3f))
+                .background(AppleBlue.copy(alpha = 0.25f))
         )
         Box(
             modifier = Modifier
-                .size(80.dp)
+                .size(54.dp)
                 .clip(CircleShape)
-                .background(IndigoPrimary.copy(alpha = 0.5f))
+                .background(AppleBlue.copy(alpha = 0.4f))
         )
         Box(
             modifier = Modifier
-                .size(40.dp)
+                .size(28.dp)
                 .clip(CircleShape)
-                .background(IndigoPrimary)
+                .background(AppleBlue)
         )
     }
 }
@@ -353,41 +422,73 @@ fun HeroOtpCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = EmeraldAccent.copy(alpha = 0.12f)),
-        border = BorderStroke(2.dp, EmeraldAccent)
+        colors = CardDefaults.cardColors(containerColor = AppleSecondaryBg),
+        border = BorderStroke(0.5.dp, AppleHairline)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "KODE VERIFIKASI DITERIMA",
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold,
-                color = EmeraldAccent
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = otpCode,
-                style = MonospaceOtpStyle,
-                color = TextPrimary,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = onCopyOtp,
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = EmeraldAccent)
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(AppleGreen.copy(alpha = 0.15f))
+                    .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.ContentCopy,
-                    contentDescription = "Salin Kode",
-                    modifier = Modifier.size(18.dp)
+                Text(
+                    text = "KODE VERIFIKASI DITERIMA",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = AppleGreen
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Salin Kode OTP", style = MaterialTheme.typography.labelLarge)
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(AppleTertiaryBg)
+                    .border(0.5.dp, AppleHairline, RoundedCornerShape(16.dp))
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "KODE OTP",
+                            fontSize = 9.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = AppleTextSecondary
+                        )
+                        Text(
+                            text = otpCode,
+                            style = MonospaceOtpStyle,
+                            color = AppleGreen,
+                            fontSize = 26.sp,
+                            fontWeight = FontWeight.Black
+                        )
+                    }
+                    Button(
+                        onClick = onCopyOtp,
+                        shape = RoundedCornerShape(50),
+                        colors = ButtonDefaults.buttonColors(containerColor = AppleGreen),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
+                        modifier = Modifier.height(34.dp)
+                    ) {
+                        Icon(
+                            painter = LucideIcons.Copy,
+                            contentDescription = "Salin Kode",
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Salin", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                    }
+                }
             }
         }
     }
@@ -413,12 +514,12 @@ fun CancellationLockBar(
             ) {
                 Text(
                     text = "Batal otomatis terkunci (Aturan 2 Menit):",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary
+                    style = MaterialTheme.typography.bodySmall,
+                    color = AppleTextSecondary
                 )
                 Text(
                     text = "${secondsRemaining}s",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = AmberWarning
                 )
@@ -428,28 +529,28 @@ fun CancellationLockBar(
                 progress = { progress },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(6.dp)
-                    .clip(RoundedCornerShape(3.dp)),
+                    .height(4.dp)
+                    .clip(RoundedCornerShape(50)),
                 color = AmberWarning,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant
+                trackColor = AppleTertiaryBg
             )
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             OutlinedButton(
                 onClick = {},
                 enabled = false,
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(50)
             ) {
-                Text("Batal Terkunci (${secondsRemaining}s)")
+                Text("Batal Terkunci (${secondsRemaining}s)", style = MaterialTheme.typography.labelMedium)
             }
         } else {
             Button(
                 onClick = onCancelClick,
-                colors = ButtonDefaults.buttonColors(containerColor = RubyError),
-                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = AppleRed),
+                shape = RoundedCornerShape(50),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Batalkan & Refund Saldo", fontWeight = FontWeight.Bold)
+                Text("Batalkan & Refund Saldo", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium)
             }
         }
     }
@@ -461,22 +562,22 @@ fun StatusBadge(
     modifier: Modifier = Modifier
 ) {
     val (bgColor, textColor, label) = when (status) {
-        "COMPLETED" -> Triple(EmeraldAccent.copy(alpha = 0.15f), EmeraldAccent, "Selesai")
-        "CANCELLED" -> Triple(RubyError.copy(alpha = 0.15f), RubyError, "Dibatalkan")
+        "COMPLETED" -> Triple(AppleGreen.copy(alpha = 0.15f), AppleGreen, "Selesai")
+        "CANCELLED" -> Triple(AppleRed.copy(alpha = 0.15f), AppleRed, "Dibatalkan")
         "TIMEOUT" -> Triple(AmberWarning.copy(alpha = 0.15f), AmberWarning, "Kadaluarsa")
-        "ACTIVE" -> Triple(CyanInfo.copy(alpha = 0.15f), CyanInfo, "Menunggu SMS")
-        else -> Triple(TextMuted.copy(alpha = 0.15f), TextMuted, status)
+        "ACTIVE" -> Triple(AppleBlue.copy(alpha = 0.15f), AppleBlue, "Menunggu SMS")
+        else -> Triple(AppleTextMuted.copy(alpha = 0.15f), AppleTextMuted, status)
     }
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(50))
             .background(bgColor)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(horizontal = 8.dp, vertical = 3.dp)
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.labelSmall,
+            fontSize = 10.sp,
             color = textColor,
             fontWeight = FontWeight.Bold
         )
@@ -501,26 +602,27 @@ fun ServicePickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = AppleSecondaryBg,
         title = {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = "Pilih Layanan SMS",
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = TextPrimary
+                    color = AppleTextPrimary
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Ketik nama layanan (WhatsApp, Google, dll)...", color = TextSecondary, style = MaterialTheme.typography.bodyMedium) },
+                    placeholder = { Text("Cari layanan (WhatsApp, KakaoTalk)...", color = AppleTextSecondary, style = MaterialTheme.typography.bodySmall) },
                     leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = "Search", tint = IndigoPrimary)
+                        Icon(painter = LucideIcons.Search, contentDescription = "Search", tint = AppleBlue, modifier = Modifier.size(16.dp))
                     },
                     trailingIcon = {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { searchQuery = "" }) {
-                                Icon(Icons.Default.Clear, contentDescription = "Clear", tint = TextSecondary)
+                                Icon(painter = LucideIcons.X, contentDescription = "Clear", tint = AppleTextSecondary, modifier = Modifier.size(16.dp))
                             }
                         }
                     },
@@ -528,10 +630,10 @@ fun ServicePickerDialog(
                     shape = RoundedCornerShape(12.dp),
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = IndigoPrimary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                        focusedContainerColor = CardDark,
-                        unfocusedContainerColor = CardDark
+                        focusedBorderColor = AppleBlue,
+                        unfocusedBorderColor = AppleHairline,
+                        focusedContainerColor = AppleTertiaryBg,
+                        unfocusedContainerColor = AppleTertiaryBg
                     )
                 )
             }
@@ -540,65 +642,78 @@ fun ServicePickerDialog(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(340.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                    .heightIn(max = 300.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 if (filteredServices.isEmpty()) {
                     item {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(32.dp),
+                                .padding(24.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("Tidak ada layanan yang cocok.", color = TextSecondary)
+                            Text("Tidak ada layanan yang cocok.", color = AppleTextSecondary, style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 } else {
                     items(filteredServices, key = { it.code }) { service ->
                         val isSelected = service.code == selectedService.code
-                        Card(
+                        Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
                                 .clickable {
                                     onSelectService(service)
                                     onDismiss()
                                 },
                             shape = RoundedCornerShape(12.dp),
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (isSelected) IndigoPrimary.copy(alpha = 0.2f) else CardDark
-                            ),
+                            color = if (isSelected) AppleBlue.copy(alpha = 0.15f) else AppleTertiaryBg,
                             border = BorderStroke(
-                                1.dp,
-                                if (isSelected) IndigoPrimary else MaterialTheme.colorScheme.outline.copy(alpha = 0.15f)
+                                0.5.dp,
+                                if (isSelected) AppleBlue else AppleHairline
                             )
                         ) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                    .padding(horizontal = 12.dp, vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column {
-                                    Text(
-                                        text = service.name,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
-                                        color = if (isSelected) IndigoPrimary else TextPrimary
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                ) {
+                                    SubcomposeAsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(service.assetUri)
+                                            .crossfade(true)
+                                            .build(),
+                                        contentDescription = service.name,
+                                        modifier = Modifier.size(20.dp),
+                                        contentScale = ContentScale.Fit
                                     )
-                                    Text(
-                                        text = "Kode: ${service.code} · ${service.category}",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = TextSecondary
-                                    )
+                                    Column {
+                                        Text(
+                                            text = service.name,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                            color = if (isSelected) AppleBlue else AppleTextPrimary
+                                        )
+                                        Text(
+                                            text = "Kode: ${service.code} · ${service.category}",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = AppleTextSecondary
+                                        )
+                                    }
                                 }
                                 if (isSelected) {
                                     Icon(
-                                        imageVector = Icons.Default.CheckCircle,
+                                        painter = LucideIcons.CheckCircle,
                                         contentDescription = "Selected",
-                                        tint = IndigoPrimary,
-                                        modifier = Modifier.size(20.dp)
+                                        tint = AppleBlue,
+                                        modifier = Modifier.size(16.dp)
                                     )
                                 }
                             }
@@ -609,7 +724,7 @@ fun ServicePickerDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Tutup", color = IndigoPrimary)
+                Text("Tutup", color = AppleBlue, fontWeight = FontWeight.SemiBold)
             }
         }
     )
@@ -626,126 +741,240 @@ fun ConfirmBuyDialog(
     selectedProvider: ProviderItem?,
     onProviderSelected: (ProviderItem?) -> Unit,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    countryIso: String? = null,
+    serviceCode: String? = null
 ) {
     val effectiveCost = selectedProvider?.price ?: baseCost
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = AppleSecondaryBg,
         title = {
-            Text(
-                text = "Konfirmasi Pembelian Nomor",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = TextPrimary
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Apple Modal Drag Handle Pill
+                Box(
+                    modifier = Modifier
+                        .width(36.dp)
+                        .height(4.dp)
+                        .clip(CircleShape)
+                        .background(AppleSeparator)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = "Konfirmasi Nomor Baru",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = AppleTextPrimary
+                )
+            }
         },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                Text("Anda akan membeli nomor virtual untuk:", color = TextSecondary)
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = flag, fontSize = 28.sp, modifier = Modifier.padding(end = 10.dp))
-                    Column {
-                        Text(
-                            text = "$countryName — $serviceName",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = TextPrimary
-                        )
+                // Selected Target Pill
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = CardDefaults.cardColors(containerColor = AppleTertiaryBg),
+                    border = BorderStroke(0.5.dp, AppleHairline)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        if (countryIso != null) {
+                            SubcomposeAsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data("file:///android_asset/countries/${countryIso.lowercase()}.svg")
+                                    .crossfade(true)
+                                    .build(),
+                                contentDescription = countryName,
+                                modifier = Modifier
+                                    .size(width = 30.dp, height = 20.dp)
+                                    .clip(RoundedCornerShape(4.dp)),
+                                contentScale = ContentScale.Crop,
+                                error = { Text(flag, fontSize = 20.sp) }
+                            )
+                        } else {
+                            Text(text = flag, fontSize = 22.sp)
+                        }
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "$countryName — $serviceName",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = AppleTextPrimary
+                            )
+                            Text(
+                                text = "Layanan Verifikasi SMS Virtual",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = AppleTextSecondary
+                            )
+                        }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(2.dp))
-
-                // Provider / Operator Selection
+                // Operator Selection Title
                 Text(
-                    text = "Pilih Operator / Provider:",
-                    style = MaterialTheme.typography.labelLarge,
+                    text = "Pilih Operator / Provider (Vertikal):",
+                    style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = TextPrimary
+                    color = AppleTextSecondary
                 )
 
                 if (isLoadingProviders) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.padding(vertical = 6.dp)
+                        modifier = Modifier.padding(vertical = 8.dp)
                     ) {
-                        CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = IndigoPrimary)
-                        Text("Memuat daftar operator...", style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+                        CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp, color = AppleBlue)
+                        Text("Memuat daftar operator...", style = MaterialTheme.typography.bodySmall, color = AppleTextSecondary)
                     }
                 } else {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(vertical = 4.dp)
+                    // Vertical Operator List (Apple Inset Grouped List)
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = CardDefaults.cardColors(containerColor = AppleTertiaryBg),
+                        border = BorderStroke(0.5.dp, AppleHairline)
                     ) {
-                        item {
-                            FilterChip(
-                                selected = selectedProvider == null,
-                                onClick = { onProviderSelected(null) },
-                                label = { Text("⚡ Otomatis (Termurah)") },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = IndigoPrimary,
-                                    selectedLabelColor = Color.White
-                                )
-                            )
-                        }
-                        items(providers) { provider ->
-                            val isSel = selectedProvider?.id == provider.id
-                            val priceStr = String.format(Locale.US, "$%.2f", provider.price)
-                            FilterChip(
-                                selected = isSel,
-                                onClick = { onProviderSelected(provider) },
-                                label = {
-                                    Text("${provider.name} ($priceStr · ${provider.count} pcs)")
-                                },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = IndigoPrimary,
-                                    selectedLabelColor = Color.White
-                                )
-                            )
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 180.dp)
+                        ) {
+                            // Option 1: Automatic
+                            item {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { onProviderSelected(null) }
+                                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        RadioButton(
+                                            selected = selectedProvider == null,
+                                            onClick = { onProviderSelected(null) },
+                                            colors = RadioButtonDefaults.colors(selectedColor = AppleBlue, unselectedColor = AppleSeparator)
+                                        )
+                                        Column {
+                                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                Text("⚡ Otomatis (Termurah)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = AppleTextPrimary)
+                                                Box(
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(50))
+                                                        .background(AppleBlue.copy(alpha = 0.2f))
+                                                        .padding(horizontal = 5.dp, vertical = 1.dp)
+                                                ) {
+                                                    Text("Rekomendasi", fontSize = 9.sp, color = AppleBlue, fontWeight = FontWeight.SemiBold)
+                                                }
+                                            }
+                                            Text("Sistem memilih operator stok terbanyak", style = MaterialTheme.typography.labelSmall, color = AppleTextSecondary)
+                                        }
+                                    }
+                                    Text(
+                                        text = String.format(Locale.US, "$%.3f", baseCost),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = AppleGreen
+                                    )
+                                }
+                            }
+
+                            // Provider Items
+                            items(providers) { provider ->
+                                val isSel = selectedProvider?.id == provider.id
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { onProviderSelected(provider) }
+                                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        RadioButton(
+                                            selected = isSel,
+                                            onClick = { onProviderSelected(provider) },
+                                            colors = RadioButtonDefaults.colors(selectedColor = AppleBlue, unselectedColor = AppleSeparator)
+                                        )
+                                        Column {
+                                            Text(provider.name, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold, color = AppleTextPrimary)
+                                            Text("Stok: ${provider.count} pcs", style = MaterialTheme.typography.labelSmall, color = AppleTextSecondary)
+                                        }
+                                    }
+                                    Text(
+                                        text = String.format(Locale.US, "$%.3f", provider.price),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = AppleGreen
+                                    )
+                                }
+                            }
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.height(4.dp))
-
+                // Summary
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(AppleTertiaryBg.copy(alpha = 0.6f))
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Total Tarif:", color = TextSecondary, style = MaterialTheme.typography.bodyLarge)
+                    Column {
+                        Text(text = "Total Biaya:", color = AppleTextSecondary, style = MaterialTheme.typography.bodySmall)
+                        Text(text = "Garansi No Code No Pay (20m)", style = MaterialTheme.typography.labelSmall, color = AppleGreen)
+                    }
                     Text(
-                        text = String.format(Locale.US, "$%.2f", effectiveCost),
-                        style = MaterialTheme.typography.headlineSmall,
+                        text = String.format(Locale.US, "$%.3f", effectiveCost),
+                        style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = EmeraldAccent
+                        color = AppleGreen
                     )
                 }
-
-                Text(
-                    text = "Catatan: Jika dalam 20 menit SMS tidak masuk, saldo akan dikembalikan secara penuh (No Code No Pay).",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TextMuted
-                )
             }
         },
         confirmButton = {
             Button(
                 onClick = onConfirm,
-                colors = ButtonDefaults.buttonColors(containerColor = IndigoPrimary),
-                shape = RoundedCornerShape(10.dp)
+                colors = ButtonDefaults.buttonColors(containerColor = AppleBlue),
+                shape = RoundedCornerShape(50),
+                modifier = Modifier.fillMaxWidth()
             ) {
+                Icon(painter = LucideIcons.Check, contentDescription = "Beli", modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.width(6.dp))
                 Text("Beli Sekarang", fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Batal")
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Batal", color = AppleTextSecondary)
             }
         }
     )

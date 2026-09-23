@@ -38,7 +38,7 @@ object ApiClient {
         .addInterceptor(loggingInterceptor)
         .addInterceptor { chain ->
             val request = chain.request().newBuilder()
-                .header("User-Agent", "UniSmsApp/1.2.0 (Android)")
+                .header("User-Agent", "UniSmsApp/1.3.0 (Android)")
                 .build()
             chain.proceed(request)
         }

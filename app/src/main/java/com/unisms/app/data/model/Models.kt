@@ -26,7 +26,13 @@ data class ServiceItem(
     val code: String,
     val name: String,
     val category: String = "Popular"
-)
+) {
+    val assetUri: String
+        get() = "file:///android_asset/services/${code.lowercase()}.svg"
+
+    val remoteUrl: String
+        get() = "https://smsbower.app/img/svg/services/${code.lowercase()}.svg"
+}
 
 data class CountryItem(
     val id: String,
@@ -34,8 +40,15 @@ data class CountryItem(
     val flagEmoji: String,
     val dialCode: String,
     val cost: Double = 0.0,
-    val count: Int = 0
-)
+    val count: Int = 0,
+    val isoCode: String? = null
+) {
+    val assetUri: String?
+        get() = isoCode?.let { "file:///android_asset/countries/${it.lowercase()}.svg" }
+
+    val remoteUrl: String?
+        get() = isoCode?.let { "https://smsbower.app/img/svg/countries/${it.lowercase()}.svg" }
+}
 
 data class ProviderItem(
     val id: String,

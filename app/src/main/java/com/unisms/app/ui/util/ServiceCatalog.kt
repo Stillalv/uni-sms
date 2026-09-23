@@ -7,6 +7,8 @@ object ServiceCatalog {
         ServiceItem("wa", "WhatsApp", "Messaging"),
         ServiceItem("tg", "Telegram", "Messaging"),
         ServiceItem("go", "Google / Gmail", "Tech"),
+        ServiceItem("kt", "KakaoTalk", "Messaging"),
+        ServiceItem("nv", "Naver", "Tech"),
         ServiceItem("oi", "OpenAI / ChatGPT", "AI"),
         ServiceItem("lf", "TikTok", "Social"),
         ServiceItem("ig", "Instagram", "Social"),

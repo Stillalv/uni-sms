@@ -19,10 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,20 +37,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.unisms.app.data.local.db.ActivationRecordEntity
 import com.unisms.app.data.model.ActivationFilter
 import com.unisms.app.ui.components.StatusBadge
-import com.unisms.app.ui.theme.EmeraldAccent
-import com.unisms.app.ui.theme.IndigoPrimary
-import com.unisms.app.ui.theme.MonospaceOtpStyle
-import com.unisms.app.ui.theme.TextPrimary
-import com.unisms.app.ui.theme.TextSecondary
+import com.unisms.app.ui.theme.AppleBlue
+import com.unisms.app.ui.theme.AppleGreen
+import com.unisms.app.ui.theme.AppleHairline
+import com.unisms.app.ui.theme.AppleRed
+import com.unisms.app.ui.theme.AppleSecondaryBg
+import com.unisms.app.ui.theme.AppleSystemBg
+import com.unisms.app.ui.theme.AppleTertiaryBg
+import com.unisms.app.ui.theme.AppleTextPrimary
+import com.unisms.app.ui.theme.AppleTextSecondary
+import com.unisms.app.ui.theme.LucideIcons
+import com.unisms.app.ui.util.CountryCatalog
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -63,10 +69,10 @@ import java.util.Locale
 @Composable
 fun HistoryScreen(
     viewModel: HistoryViewModel,
-    onNavigateToActiveOtp: (Long) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNavigateToActiveOtp: (Long) -> Unit
 ) {
-    val records by viewModel.historyRecords.collectAsState()
+    val records by viewModel.filteredRecords.collectAsState()
     val currentFilter by viewModel.filter.collectAsState()
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
@@ -74,20 +80,20 @@ fun HistoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Riwayat Aktivasi", fontWeight = FontWeight.Bold) },
+                title = { Text("Riwayat Aktivasi", fontWeight = FontWeight.Bold, fontSize = 17.sp) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali")
+                        Icon(painter = LucideIcons.ArrowLeft, contentDescription = "Kembali", modifier = Modifier.size(20.dp), tint = AppleBlue)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = TextPrimary,
-                    navigationIconContentColor = TextPrimary
+                    containerColor = AppleSystemBg,
+                    titleContentColor = AppleTextPrimary,
+                    navigationIconContentColor = AppleBlue
                 )
             )
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = AppleSystemBg
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -95,10 +101,10 @@ fun HistoryScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
         ) {
-            // Filter Chips Row
+            // Apple Filter Chips Row
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(vertical = 8.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                contentPadding = PaddingValues(vertical = 6.dp)
             ) {
                 items(ActivationFilter.entries.toTypedArray()) { filter ->
                     val label = when (filter) {
@@ -110,16 +116,20 @@ fun HistoryScreen(
                     FilterChip(
                         selected = currentFilter == filter,
                         onClick = { viewModel.setFilter(filter) },
-                        label = { Text(label) },
+                        label = { Text(label, fontSize = 12.sp) },
+                        shape = RoundedCornerShape(50),
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = IndigoPrimary,
-                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
-                        )
+                            selectedContainerColor = AppleBlue,
+                            selectedLabelColor = AppleTextPrimary,
+                            containerColor = AppleSecondaryBg,
+                            labelColor = AppleTextSecondary
+                        ),
+                        border = BorderStroke(0.5.dp, if (currentFilter == filter) AppleBlue else AppleHairline)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             if (records.isEmpty()) {
                 Box(
@@ -130,15 +140,15 @@ fun HistoryScreen(
                 ) {
                     Text(
                         text = "Belum ada riwayat aktivasi.",
-                        color = TextSecondary,
-                        style = MaterialTheme.typography.bodyLarge
+                        color = AppleTextSecondary,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             } else {
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(bottom = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(records, key = { it.id }) { record ->
                         HistoryRecordCard(
@@ -174,94 +184,48 @@ fun HistoryRecordCard(
 ) {
     val dateFormat = remember { SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()) }
     val formattedDate = remember(record.createdAt) { dateFormat.format(Date(record.createdAt)) }
+    val iso = CountryCatalog.getCountryIso(record.countryId)
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
+        colors = CardDefaults.cardColors(containerColor = AppleSecondaryBg),
+        border = BorderStroke(0.5.dp, AppleHairline)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(14.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = record.flagEmoji, fontSize = 22.sp)
+                    if (iso != null) {
+                        SubcomposeAsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data("file:///android_asset/countries/${iso.lowercase()}.svg")
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = record.countryName,
+                            modifier = Modifier
+                                .size(width = 28.dp, height = 18.dp)
+                                .clip(RoundedCornerShape(4.dp)),
+                            contentScale = ContentScale.Crop,
+                            error = { Text(text = record.flagEmoji, fontSize = 18.sp) }
+                        )
+                    } else {
+                        Text(text = record.flagEmoji, fontSize = 18.sp)
+                    }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "${record.countryName} — ${record.serviceName}",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary
+                        color = AppleTextPrimary
                     )
                 }
                 StatusBadge(status = record.status)
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "+${record.phoneNumber}",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = TextPrimary
-                    )
-                    IconButton(onClick = onCopyPhone, modifier = Modifier.size(28.dp)) {
-                        Icon(
-                            imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copy Phone",
-                            tint = IndigoPrimary,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
-                Text(
-                    text = String.format(Locale.US, "$%.2f", record.cost),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = EmeraldAccent
-                )
-            }
-
-            if (!record.otpCode.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(6.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "OTP: ",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TextSecondary
-                        )
-                        Text(
-                            text = record.otpCode.orEmpty(),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = EmeraldAccent
-                        )
-                    }
-                    IconButton(onClick = onCopyOtp, modifier = Modifier.size(28.dp)) {
-                        Icon(
-                            imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copy OTP",
-                            tint = EmeraldAccent,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -271,17 +235,80 @@ fun HistoryRecordCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "+${record.phoneNumber}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = AppleTextPrimary
+                    )
+                    IconButton(onClick = onCopyPhone, modifier = Modifier.size(24.dp)) {
+                        Icon(
+                            painter = LucideIcons.Copy,
+                            contentDescription = "Copy Phone",
+                            tint = AppleBlue,
+                            modifier = Modifier.size(13.dp)
+                        )
+                    }
+                }
+                Text(
+                    text = String.format(Locale.US, "$%.2f", record.cost),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = AppleGreen
+                )
+            }
+
+            if (!record.otpCode.isNullOrEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "OTP: ",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = AppleTextSecondary
+                        )
+                        Text(
+                            text = record.otpCode.orEmpty(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = AppleGreen
+                        )
+                    }
+                    IconButton(onClick = onCopyOtp, modifier = Modifier.size(24.dp)) {
+                        Icon(
+                            painter = LucideIcons.Copy,
+                            contentDescription = "Copy OTP",
+                            tint = AppleGreen,
+                            modifier = Modifier.size(13.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = formattedDate,
                     style = MaterialTheme.typography.labelSmall,
-                    color = TextSecondary
+                    color = AppleTextSecondary,
+                    fontSize = 11.sp
                 )
-                IconButton(onClick = onDelete, modifier = Modifier.size(28.dp)) {
+                IconButton(onClick = onDelete, modifier = Modifier.size(24.dp)) {
                     Icon(
-                        imageVector = Icons.Default.DeleteOutline,
+                        painter = LucideIcons.Trash2,
                         contentDescription = "Hapus Record",
-                        tint = TextSecondary,
-                        modifier = Modifier.size(16.dp)
+                        tint = AppleRed.copy(alpha = 0.8f),
+                        modifier = Modifier.size(13.dp)
                     )
                 }
             }
