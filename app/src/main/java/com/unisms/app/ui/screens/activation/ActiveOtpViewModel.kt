@@ -21,7 +21,7 @@ data class ActiveOtpUiState(
     val isLoading: Boolean = true,
     val otpCode: String? = null,
     val isPolling: Boolean = false,
-    val secondsUntilCanCancel: Int = 120, // 2-minute lock (120s)
+    val secondsUntilCanCancel: Int = 0, // Instant cancellation enabled
     val secondsUntilExpire: Int = 1200,   // 20-minute session (1200s)
     val statusMessage: String = "Menunggu SMS masuk...",
     val isCancelled: Boolean = false,
@@ -53,14 +53,13 @@ class ActiveOtpViewModel(
             val record = repository.getRecordById(recordId)
             if (record != null) {
                 val elapsedSeconds = ((System.currentTimeMillis() - record.createdAt) / 1000).toInt()
-                val initialCancelSecs = (120 - elapsedSeconds).coerceAtLeast(0)
                 val initialExpireSecs = (1200 - elapsedSeconds).coerceAtLeast(0)
 
                 _uiState.value = _uiState.value.copy(
                     record = record,
                     isLoading = false,
                     otpCode = record.otpCode,
-                    secondsUntilCanCancel = initialCancelSecs,
+                    secondsUntilCanCancel = 0,
                     secondsUntilExpire = initialExpireSecs,
                     isCompleted = record.status == "COMPLETED",
                     isCancelled = record.status == "CANCELLED"
@@ -85,14 +84,11 @@ class ActiveOtpViewModel(
         timerJob = viewModelScope.launch {
             while (isActive) {
                 delay(1000)
-                val currentCancel = _uiState.value.secondsUntilCanCancel
                 val currentExpire = _uiState.value.secondsUntilExpire
-
-                val nextCancel = (currentCancel - 1).coerceAtLeast(0)
                 val nextExpire = (currentExpire - 1).coerceAtLeast(0)
 
                 _uiState.value = _uiState.value.copy(
-                    secondsUntilCanCancel = nextCancel,
+                    secondsUntilCanCancel = 0,
                     secondsUntilExpire = nextExpire
                 )
 
@@ -174,12 +170,6 @@ class ActiveOtpViewModel(
 
     fun cancelOrder() {
         val record = _uiState.value.record ?: return
-        if (_uiState.value.secondsUntilCanCancel > 0) {
-            _uiState.value = _uiState.value.copy(
-                errorMessage = "Nomor baru bisa dibatalkan setelah 2 menit sejak pembelian."
-            )
-            return
-        }
 
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isActionInProgress = true, errorMessage = null)

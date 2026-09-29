@@ -1,8 +1,19 @@
 package com.unisms.app.ui.screens.history
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import com.unisms.app.ui.components.pressScale
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -65,7 +76,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HistoryScreen(
     viewModel: HistoryViewModel,
@@ -131,41 +142,57 @@ fun HistoryScreen(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            if (records.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Belum ada riwayat aktivasi.",
-                        color = AppleTextSecondary,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(bottom = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(records, key = { it.id }) { record ->
-                        HistoryRecordCard(
-                            record = record,
-                            onClick = { onNavigateToActiveOtp(record.id) },
-                            onCopyPhone = {
-                                clipboardManager.setText(AnnotatedString(record.phoneNumber))
-                                Toast.makeText(context, "Nomor disalin ke clipboard", Toast.LENGTH_SHORT).show()
-                            },
-                            onCopyOtp = {
-                                record.otpCode?.let {
-                                    clipboardManager.setText(AnnotatedString(it))
-                                    Toast.makeText(context, "OTP disalin ke clipboard", Toast.LENGTH_SHORT).show()
-                                }
-                            },
-                            onDelete = { viewModel.deleteRecord(record) }
+            AnimatedContent(
+                targetState = currentFilter to records.isEmpty(),
+                transitionSpec = {
+                    (fadeIn(animationSpec = tween(220)) + scaleIn(initialScale = 0.98f, animationSpec = tween(220)))
+                        .togetherWith(fadeOut(animationSpec = tween(160)))
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                label = "historyRecordsTransition"
+            ) { (_, isEmpty) ->
+                if (isEmpty) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Belum ada riwayat aktivasi.",
+                            color = AppleTextSecondary,
+                            style = MaterialTheme.typography.bodyMedium
                         )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(records, key = { it.id }) { record ->
+                            HistoryRecordCard(
+                                record = record,
+                                onClick = { onNavigateToActiveOtp(record.id) },
+                                onCopyPhone = {
+                                    clipboardManager.setText(AnnotatedString(record.phoneNumber))
+                                    Toast.makeText(context, "Nomor disalin ke clipboard", Toast.LENGTH_SHORT).show()
+                                },
+                                onCopyOtp = {
+                                    record.otpCode?.let {
+                                        clipboardManager.setText(AnnotatedString(it))
+                                        Toast.makeText(context, "OTP disalin ke clipboard", Toast.LENGTH_SHORT).show()
+                                    }
+                                },
+                                onDelete = { viewModel.deleteRecord(record) },
+                                modifier = Modifier.animateItemPlacement(
+                                    animationSpec = spring(
+                                        dampingRatio = Spring.DampingRatioNoBouncy,
+                                        stiffness = Spring.StiffnessMediumLow
+                                    )
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -185,11 +212,17 @@ fun HistoryRecordCard(
     val dateFormat = remember { SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault()) }
     val formattedDate = remember(record.createdAt) { dateFormat.format(Date(record.createdAt)) }
     val iso = CountryCatalog.getCountryIso(record.countryId)
+    val interactionSource = remember { MutableInteractionSource() }
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .pressScale(interactionSource)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = AppleSecondaryBg),
         border = BorderStroke(0.5.dp, AppleHairline)

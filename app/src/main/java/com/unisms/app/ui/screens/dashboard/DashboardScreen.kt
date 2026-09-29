@@ -1,6 +1,15 @@
 package com.unisms.app.ui.screens.dashboard
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -63,6 +72,7 @@ import com.unisms.app.ui.theme.LucideIcons
 import com.unisms.app.ui.theme.TextPrimary
 import com.unisms.app.ui.theme.TextSecondary
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DashboardScreen(
     viewModel: DashboardViewModel,
@@ -229,48 +239,72 @@ fun DashboardScreen(
                 }
             }
 
-            if (uiState.isCatalogLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator(color = AppleBlue)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = "Memuat stok negara untuk ${uiState.selectedService.name}...",
-                            color = AppleTextSecondary,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+            val catalogState = when {
+                uiState.isCatalogLoading -> "loading"
+                filteredCountries.isEmpty() -> "empty"
+                else -> "content"
+            }
+
+            AnimatedContent(
+                targetState = catalogState,
+                transitionSpec = {
+                    (fadeIn(animationSpec = tween(220)) + scaleIn(initialScale = 0.98f, animationSpec = tween(220)))
+                        .togetherWith(fadeOut(animationSpec = tween(160)))
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                label = "catalogContentTransition"
+            ) { state ->
+                when (state) {
+                    "loading" -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                CircularProgressIndicator(color = AppleBlue)
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text(
+                                    text = "Memuat stok negara untuk ${uiState.selectedService.name}...",
+                                    color = AppleTextSecondary,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
                     }
-                }
-            } else if (filteredCountries.isEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = if (uiState.searchQuery.isNotEmpty()) "Tidak ada negara yang cocok dengan '${uiState.searchQuery}'"
-                        else "Tidak ada stok nomor untuk layanan ini saat ini.",
-                        color = AppleTextSecondary,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(bottom = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    items(filteredCountries, key = { it.id }) { country ->
-                        CountryItemRow(
-                            country = country,
-                            onBuyClick = { viewModel.initiateBuy(country) }
-                        )
+                    "empty" -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = if (uiState.searchQuery.isNotEmpty()) "Tidak ada negara yang cocok dengan '${uiState.searchQuery}'"
+                                else "Tidak ada stok nomor untuk layanan ini saat ini.",
+                                color = AppleTextSecondary,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                    "content" -> {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(bottom = 16.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            items(filteredCountries, key = { it.id }) { country ->
+                                CountryItemRow(
+                                    country = country,
+                                    onBuyClick = { viewModel.initiateBuy(country) },
+                                    modifier = Modifier.animateItemPlacement(
+                                        animationSpec = spring(
+                                            dampingRatio = Spring.DampingRatioNoBouncy,
+                                            stiffness = Spring.StiffnessMediumLow
+                                        )
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             }

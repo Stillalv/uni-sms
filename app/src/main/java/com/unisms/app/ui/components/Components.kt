@@ -1,12 +1,20 @@
 package com.unisms.app.ui.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.ui.composed
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -88,6 +96,25 @@ import com.unisms.app.ui.theme.TextMuted
 import com.unisms.app.ui.theme.TextPrimary
 import com.unisms.app.ui.theme.TextSecondary
 import java.util.Locale
+
+fun Modifier.pressScale(
+    interactionSource: InteractionSource,
+    scaleDown: Float = 0.96f
+): Modifier = composed {
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) scaleDown else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMediumLow
+        ),
+        label = "pressScale"
+    )
+    this.graphicsLayer {
+        scaleX = scale
+        scaleY = scale
+    }
+}
 
 @Composable
 fun BalanceCard(
@@ -210,10 +237,16 @@ fun ServiceFilterChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     Surface(
         modifier = modifier
+            .pressScale(interactionSource)
             .clip(RoundedCornerShape(50))
-            .clickable(onClick = onClick),
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            ),
         shape = RoundedCornerShape(50),
         color = if (isSelected) AppleBlue else AppleSecondaryBg,
         border = BorderStroke(
@@ -267,10 +300,16 @@ fun CountryItemRow(
     onBuyClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onBuyClick),
+            .pressScale(interactionSource)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onBuyClick
+            ),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = AppleSecondaryBg),
         border = BorderStroke(0.5.dp, AppleHairline)
@@ -496,63 +535,96 @@ fun HeroOtpCard(
 
 @Composable
 fun CancellationLockBar(
-    secondsRemaining: Int,
+    secondsRemaining: Int = 0,
     onCancelClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val progress = (120 - secondsRemaining).coerceIn(0, 120) / 120f
-    val isLocked = secondsRemaining > 0
+    var showConfirmDialog by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (isLocked) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Batal otomatis terkunci (Aturan 2 Menit):",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = AppleTextSecondary
-                )
-                Text(
-                    text = "${secondsRemaining}s",
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Bold,
-                    color = AmberWarning
-                )
-            }
-            Spacer(modifier = Modifier.height(6.dp))
-            LinearProgressIndicator(
-                progress = { progress },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(4.dp)
-                    .clip(RoundedCornerShape(50)),
-                color = AmberWarning,
-                trackColor = AppleTertiaryBg
+        Button(
+            onClick = { showConfirmDialog = true },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = AppleRed.copy(alpha = 0.15f),
+                contentColor = AppleRed
+            ),
+            border = BorderStroke(0.5.dp, AppleRed.copy(alpha = 0.4f)),
+            shape = RoundedCornerShape(50),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(44.dp)
+                .pressScale(interactionSource)
+        ) {
+            Icon(
+                painter = LucideIcons.X,
+                contentDescription = "Batal",
+                modifier = Modifier.size(16.dp),
+                tint = AppleRed
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            OutlinedButton(
-                onClick = {},
-                enabled = false,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(50)
-            ) {
-                Text("Batal Terkunci (${secondsRemaining}s)", style = MaterialTheme.typography.labelMedium)
-            }
-        } else {
-            Button(
-                onClick = onCancelClick,
-                colors = ButtonDefaults.buttonColors(containerColor = AppleRed),
-                shape = RoundedCornerShape(50),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Batalkan & Refund Saldo", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium)
-            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                "Batalkan Nomor & Refund Saldo",
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.labelMedium,
+                color = AppleRed
+            )
         }
+
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = "Dapat dibatalkan seketika tanpa batas waktu tunggu. Saldo otomatis dikembalikan.",
+            style = MaterialTheme.typography.bodySmall,
+            color = AppleTextSecondary,
+            fontSize = 11.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+
+    if (showConfirmDialog) {
+        AlertDialog(
+            onDismissRequest = { showConfirmDialog = false },
+            containerColor = AppleSecondaryBg,
+            shape = RoundedCornerShape(20.dp),
+            title = {
+                Text(
+                    "Batalkan Nomor?",
+                    fontWeight = FontWeight.Bold,
+                    color = AppleTextPrimary,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            text = {
+                Text(
+                    "Nomor virtual akan dibatalkan seketika dan saldo akun SMSBower Anda akan langsung dikembalikan.",
+                    color = AppleTextSecondary,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showConfirmDialog = false
+                        onCancelClick()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = AppleRed),
+                    shape = RoundedCornerShape(50)
+                ) {
+                    Text("Ya, Batalkan", fontWeight = FontWeight.Bold, color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showConfirmDialog = false },
+                    shape = RoundedCornerShape(50)
+                ) {
+                    Text("Kembali", color = AppleBlue)
+                }
+            }
+        )
     }
 }
 
@@ -774,7 +846,9 @@ fun ConfirmBuyDialog(
         },
         text = {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMediumLow)),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 // Selected Target Pill
